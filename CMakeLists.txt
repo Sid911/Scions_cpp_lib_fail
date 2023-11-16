@@ -65,6 +65,10 @@ if(NOT PROJECT_IS_TOP_LEVEL)
   return()
 endif()
 
+if(Scions_BUILD_EXAMPLE)
+  add_subdirectory(examples)
+endif ()
+
 # Adding the tests:
 include(CTest)
 
