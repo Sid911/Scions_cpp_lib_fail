@@ -2,7 +2,7 @@ macro(Scions_configure_linker project_name)
   include(CheckCXXCompilerFlag)
 
   set(USER_LINKER_OPTION
-      "lld"
+      "mold"
       CACHE STRING "Linker to be used")
   set(USER_LINKER_OPTION_VALUES "lld" "gold" "bfd" "mold")
   set_property(CACHE USER_LINKER_OPTION PROPERTY STRINGS ${USER_LINKER_OPTION_VALUES})
@@ -16,9 +16,11 @@ macro(Scions_configure_linker project_name)
     message(
       STATUS
         "Using custom linker: '${USER_LINKER_OPTION}', explicitly supported entries are ${USER_LINKER_OPTION_VALUES}")
+  else()
+    message(STATUS "Using ${USER_LINKER_OPTION} Linker")
   endif()
 
-  if(NOT ENABLE_USER_LINKER)
+  if(NOT Scions_ENABLE_USER_LINKER)
     return()
   endif()
 
@@ -26,6 +28,6 @@ macro(Scions_configure_linker project_name)
 
   check_cxx_compiler_flag(${LINKER_FLAG} CXX_SUPPORTS_USER_LINKER)
   if(CXX_SUPPORTS_USER_LINKER)
-    target_compile_options(${project_name} INTERFACE ${LINKER_FLAG})
+    target_link_options(${project_name} INTERFACE ${LINKER_FLAG})
   endif()
 endmacro()

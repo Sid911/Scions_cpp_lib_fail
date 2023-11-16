@@ -12,7 +12,7 @@ target_link_libraries(sample_library PRIVATE Scions_options Scions_warnings)
 target_include_directories(sample_library ${WARNING_GUARD} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                                                                   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>)
 
-target_compile_features(sample_library PUBLIC cxx_std_20)
+target_compile_features(sample_library PUBLIC cxx_std_23)
 
 set_target_properties(
   sample_library
@@ -24,4 +24,5 @@ generate_export_header(sample_library EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/inc
 
 if(NOT BUILD_SHARED_LIBS)
   target_compile_definitions(sample_library PUBLIC SAMPLE_LIBRARY_STATIC_DEFINE)
+  message(STATUS "Sample library is built for static linking")
 endif()

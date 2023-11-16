@@ -6,19 +6,19 @@ cmake_minimum_required(VERSION 3.21)
 
 # Only set the cxx_standard if it is not set by someone else
 if (NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_STANDARD 23)
 endif()
 
 # strongly encouraged to enable this globally to avoid conflicts between
 # -Wpedantic being enabled and -std=c++20 and -std=gnu++20 for example
 # when compiling with PCH enabled
-set(CMAKE_CXX_EXTENSIONS OFF)
-
+set(CMAKE_CXX_EXTENSIONS ON)
+#set(Scions_ENABLE_USER_LINKER ON)
 # Set the project name and language
 project(
   Scions
   VERSION 0.0.1
-  DESCRIPTION ""
+  DESCRIPTION "A lightweight and fast ML framework built for the edge"
   HOMEPAGE_URL "https://github.com/Sid911/Scions"
   LANGUAGES CXX C)
 
@@ -69,19 +69,19 @@ endif()
 include(CTest)
 
 if(BUILD_TESTING)
-  message(AUTHOR_WARNING "Building Tests. Be sure to check out test/constexpr_tests.cpp for constexpr testing")
+#  message(AUTHOR_WARNING "Building Tests. Be sure to check out test/constexpr_tests.cpp for constexpr testing")
   add_subdirectory(test)
 endif()
 
-
-if(Scions_BUILD_FUZZ_TESTS)
-  message(AUTHOR_WARNING "Building Fuzz Tests, using fuzzing sanitizer https://www.llvm.org/docs/LibFuzzer.html")
-  if (NOT Scions_ENABLE_ADDRESS_SANITIZER AND NOT Scions_ENABLE_THREAD_SANITIZER)
-    message(WARNING "You need asan or tsan enabled for meaningful fuzz testing")
-  endif()
-  add_subdirectory(fuzz_test)
-
-endif()
+#
+#if(Scions_BUILD_FUZZ_TESTS)
+#  message(AUTHOR_WARNING "Building Fuzz Tests, using fuzzing sanitizer https://www.llvm.org/docs/LibFuzzer.html")
+#  if (NOT Scions_ENABLE_ADDRESS_SANITIZER AND NOT Scions_ENABLE_THREAD_SANITIZER)
+#    message(WARNING "You need asan or tsan enabled for meaningful fuzz testing")
+#  endif()
+#  add_subdirectory(fuzz_test)
+#
+#endif()
 
 # If MSVC is being used, and ASAN is enabled, we need to set the debugger environment
 # so that it behaves well with MSVC's debugger, and we can run the target from visual studio
@@ -102,14 +102,14 @@ include(cmake/PackageProject.cmake)
 
 # Add other targets that you want installed here, by default we just package the one executable
 # we know we want to ship
-Scions_package_project(
-  TARGETS
-  intro
-  Scions_options
-  Scions_warnings
-  # FIXME: this does not work! CK
-  # PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
-)
+#Scions_package_project(
+#  TARGETS
+#  intro
+#  Scions_options
+#  Scions_warnings
+#  # FIXME: this does not work! CK
+#  # PRIVATE_DEPENDENCIES_CONFIGURED project_options project_warnings
+#)
 
 # Experience shows that explicit package naming can help make it easier to sort
 # out potential ABI related issues before they start, while helping you

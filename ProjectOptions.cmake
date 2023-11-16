@@ -6,7 +6,7 @@ include(CheckCXXCompilerFlag)
 
 macro(Scions_supports_sanitizers)
   if((CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*" OR CMAKE_CXX_COMPILER_ID MATCHES ".*GNU.*") AND NOT WIN32)
-    set(SUPPORTS_UBSAN ON)
+    set(SUPPORTS_UBSAN OFF) # Turn it off for now
   else()
     set(SUPPORTS_UBSAN OFF)
   endif()
@@ -19,7 +19,7 @@ macro(Scions_supports_sanitizers)
 endmacro()
 
 macro(Scions_setup_options)
-  option(Scions_ENABLE_HARDENING "Enable hardening" ON)
+  option(Scions_ENABLE_HARDENING "Enable hardening" OFF)
   option(Scions_ENABLE_COVERAGE "Enable coverage reporting" OFF)
   cmake_dependent_option(
     Scions_ENABLE_GLOBAL_HARDENING
@@ -33,7 +33,7 @@ macro(Scions_setup_options)
   if(NOT PROJECT_IS_TOP_LEVEL OR Scions_PACKAGING_MAINTAINER_MODE)
     option(Scions_ENABLE_IPO "Enable IPO/LTO" OFF)
     option(Scions_WARNINGS_AS_ERRORS "Treat Warnings As Errors" OFF)
-    option(Scions_ENABLE_USER_LINKER "Enable user-selected linker" OFF)
+    option(Scions_ENABLE_USER_LINKER "Enable user-selected linker" ON)
     option(Scions_ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" OFF)
     option(Scions_ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
     option(Scions_ENABLE_SANITIZER_UNDEFINED "Enable undefined sanitizer" OFF)
@@ -43,11 +43,11 @@ macro(Scions_setup_options)
     option(Scions_ENABLE_CLANG_TIDY "Enable clang-tidy" OFF)
     option(Scions_ENABLE_CPPCHECK "Enable cpp-check analysis" OFF)
     option(Scions_ENABLE_PCH "Enable precompiled headers" OFF)
-    option(Scions_ENABLE_CACHE "Enable ccache" OFF)
+    option(Scions_ENABLE_CACHE "Enable ccache" ON)
   else()
     option(Scions_ENABLE_IPO "Enable IPO/LTO" ON)
     option(Scions_WARNINGS_AS_ERRORS "Treat Warnings As Errors" ON)
-    option(Scions_ENABLE_USER_LINKER "Enable user-selected linker" OFF)
+    option(Scions_ENABLE_USER_LINKER "Enable user-selected linker" ON)
     option(Scions_ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" ${SUPPORTS_ASAN})
     option(Scions_ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
     option(Scions_ENABLE_SANITIZER_UNDEFINED "Enable undefined sanitizer" ${SUPPORTS_UBSAN})
@@ -132,7 +132,7 @@ macro(Scions_local_options)
 
   if(Scions_ENABLE_USER_LINKER)
     include(cmake/Linker.cmake)
-    configure_linker(Scions_options)
+    Scions_configure_linker(Scions_options)
   endif()
 
   include(cmake/Sanitizers.cmake)
@@ -152,7 +152,9 @@ macro(Scions_local_options)
       INTERFACE
       <vector>
       <string>
-      <utility>)
+      <utility>
+      <exceptions>
+    )
   endif()
 
   if(Scions_ENABLE_CACHE)
