@@ -4,8 +4,15 @@
 #pragma once
 
 #include "Scions/core/op/op.h"
+#include "Scions/ep/cpu/mem/mem_manager.h"
 
 namespace scions::ep::cpu::_internal{
-void tensorAdd(scions::op::OpDesc& desc, std::span<uint8_t *>& span);
-void tensorMul(scions::op::OpDesc& desc, std::span<uint8_t *>& span);
+template<size_t Mem, uint64_t Size>
+inline void tensorAdd(op::OpDesc& desc, CpuMemoryManager<Mem, Size>& manager) {
+
+}
+template<size_t Mem, uint64_t Size>
+inline void tensorMul(op::OpDesc& desc, CpuMemoryManager<Mem, Size>& manager) {
+
+}
 }

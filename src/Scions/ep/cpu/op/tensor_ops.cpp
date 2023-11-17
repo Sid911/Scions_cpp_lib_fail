@@ -3,12 +3,5 @@
 //
 #include "Scions/ep/cpu/op/tensor_ops.h"
 
-namespace scions::ep::cpu::_internal{
-    void tensorAdd(){
-
-    }
-
-    void tensorMul() {
-
-    }
+namespace scions::ep::cpu::_internal {
 }

@@ -4,51 +4,56 @@
 #include "Scions/core/op/op.h"
 #include "Scions/core/op/tensor_op.h"
 #include "Scions/ep/cpu/cpu_ep.h"
-#include "random"
+#include "Scions/ep/cpu/mem/mem_manager.h"
+#include "fmt/core.h"
 
 using namespace std;
 
 // builds the graph at compile time
 [[nodiscard]] consteval auto buildGraph() {
 
-    // Alright here will be the example start
-    using namespace scions;
+  // Alright here will be the example start
+  using namespace scions;
 
-    static constexpr array objects = {
-        mem::StaticMemObject(16, "inp1"),
-        mem::StaticMemObject(1, 2, 3, "inp2"),
-        mem::StaticMemObject({1024*10, 1024*10}, "inp3"),
-        mem::StaticMemObject({64, 64, 64}, "inp4"),
-    };
+  static constexpr array objects = {
+    mem::StaticMemObject(16, "inp1"),
+    mem::StaticMemObject(1, 2, 3, "inp2"),
+    mem::StaticMemObject({ 1024 * 10, 1024 * 10 }, "inp3"),
+    mem::StaticMemObject({ 64, 64, 64 }, "inp4"),
+  };
 
-    constexpr mem::MemDescriptor desc = mem::MemDescriptor(objects);
+  constexpr mem::MemDescriptor desc = mem::MemDescriptor(objects);
 
-    constexpr std::array<op::OpDesc, 2> tensors = {
-        op::tensor::TensorAddOpDesc(0, 1, 2),
-        op::tensor::TensorMultiplyOpDesc(0, 3, 2),
-    };
+  constexpr std::array<op::OpDesc, 2> tensors = {
+    op::tensor::TensorAddOpDesc(0, 1, 2),
+    op::tensor::TensorMultiplyOpDesc(0, 3, 2),
+  };
 
-    constexpr graph::SequentialGraph<2,4> graph = {tensors, desc};
+  constexpr graph::SequentialGraph graph = { tensors, desc };
 
-    return graph;
+  return graph;
 }
 
 int main() {
-    using namespace scions;
-    using namespace scions::ep;
-    // Compile time graph
-    static constexpr auto res = buildGraph();
-    // generate Runtime Reference to the graph
-    const graph::RuntimeSequentialGraph graph =
-        graph::RuntimeSequentialGraph(res);
-    // set CPUExecutionProvider Options
-    constexpr cpu::CPUOptions options{true};
-    //  set the provider
-    auto provider =
-        cpu::CPUStaticExecutionProvider(res, options);
+  using namespace scions;
+  using namespace scions::ep;
+  // Compile time graph
+  static constexpr auto res   = buildGraph();
+  static constexpr auto &desc = res.memDescriptor;
+  static constexpr auto size  = desc.memoryObjects.size();
+  static constexpr auto by    = desc.getTotalBytes();
+  // set CPUExecutionProvider Options
+  constexpr cpu::CPUOptions options;
 
-    // Generate data for
-    auto result = provider.allocateAll();
+  // Note: Always set this to static if you don't want to blow past
+  // the stack size
+  static auto manager  = cpu::CpuMemoryManager<size, by>(res.memDescriptor);
+  const span<int> span = manager.getSpan<>(2);
+  span[2]              = 3;
 
-    return 0;
+  fmt::println("{}, size : {}, sizeof manager", span[2], span.size(), sizeof(manager));
+
+  auto provider = cpu::CPUStaticExecutionProvider(res, manager,options);
+
+  return 0;
 }

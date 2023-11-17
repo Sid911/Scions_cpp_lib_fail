@@ -9,9 +9,9 @@
 #include "Scions/core/mem/mem_desc.h"
 
 namespace scions::graph {
-template <size_t Ops, size_t Mem>
+template<size_t Ops, size_t Mem>
 struct SequentialGraph {
-    std::array<op::OpDesc, Ops>  ops;
-    mem::MemDescriptor<Mem> memDescriptor;
+  std::array<op::OpDesc, Ops> ops;
+  mem::MemDescriptor<Mem> memDescriptor;
 };
 }
