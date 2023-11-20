@@ -18,19 +18,19 @@ enum TYPE {
 constexpr uint8_t getDTypeSizeBytes(const TYPE t){
     switch (t) {
     case INT8:
-        return 1;
+        return sizeof(int8_t);
     case INT16:
-        return 2;
+        return sizeof(int16_t);
     case INT32:
-        return 4;
+        return sizeof(int32_t);
     case INT64:
-        return 8;
+        return sizeof(int64_t);
     case F16:
-        return 2;
+        return sizeof(int16_t);
     case F32:
-        return 4;
+        return sizeof(float_t);
     case F64:
-        return 8;
+        return sizeof(double);
     }
 }
 

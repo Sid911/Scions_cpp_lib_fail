@@ -17,7 +17,7 @@ public:
   constexpr TensorAddOpDesc(const size_t &input1,
     const size_t &input2,
     const size_t &output1)
-    : OpDesc(TENSOR_ADD_OP_ID, { input1, input2 }, { output1 }, "Tensor Add Op") {}
+    : OpDesc(TENSOR_ADD_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Add Op") {}
 };
 
 class TensorSubtractOpDesc : public OpDesc {
@@ -29,7 +29,7 @@ public:
   constexpr TensorSubtractOpDesc(const size_t &input1,
     const size_t &input2,
     const size_t &output1)
-    : OpDesc(TENSOR_SUBTRACT_OP_ID, { input1, input2 }, { output1 }, "Tensor Subtract Op") {}
+    : OpDesc(TENSOR_SUBTRACT_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Subtract Op") {}
 };
 
 // Class for describing a multiplication operation
@@ -42,7 +42,7 @@ public:
   constexpr TensorMultiplyOpDesc(const size_t &input1,
     const size_t &input2,
     const size_t &output1)
-    : OpDesc(TENSOR_MULTIPLY_OP_ID, { input1, input2 }, { output1 }, "Tensor Multiply Op") {}
+    : OpDesc(TENSOR_MULTIPLY_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Multiply Op") {}
 };
 
 // Class for describing a division operation
@@ -55,7 +55,7 @@ public:
   constexpr TensorDivideOpDesc(const size_t &input1,
     const size_t &input2,
     const size_t &output1)
-    : OpDesc(TENSOR_DIVIDE_OP_ID, { input1, input2 }, { output1 }, "Tensor Divide Op") {}
+    : OpDesc(TENSOR_DIVIDE_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Divide Op") {}
 };
 
 // Class for describing an exponentiation operation
@@ -68,7 +68,7 @@ public:
   constexpr TensorExponentiateOpDesc(const size_t &input1,
     const size_t &input2,
     const size_t &output1)
-    : OpDesc(TENSOR_EXPONENTIATION_OP_ID, { input1, input2 }, { output1 }, "Tensor Exponentiate Op") {}
+    : OpDesc(TENSOR_EXPONENTIATION_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Exponentiate Op") {}
 };
 
 // Class for describing a logarithm operation
@@ -80,7 +80,7 @@ public:
 
   constexpr TensorLogOpDesc(const size_t &input1,
     const size_t &output1)
-    : OpDesc(TENSOR_LOG_OP_ID, { input1 }, { output1 }, "Tensor Log Op") {}
+    : OpDesc(TENSOR_LOG_OP_ID, { input1 + 1 }, { output1 + 1 }, "Tensor Log Op") {}
 };
 
 
@@ -93,7 +93,7 @@ public:
 
   constexpr TensorSquareRootOpDesc(const size_t &input1,
     const size_t &output1)
-    : OpDesc(TENSOR_SQUARE_ROOT_OP_ID, { input1 }, { output1 }, "Tensor Square Root Op") {}
+    : OpDesc(TENSOR_SQUARE_ROOT_OP_ID, { input1 + 1 }, { output1 + 1 }, "Tensor Square Root Op") {}
 };
 
 // Class for describing a mean operation
@@ -105,7 +105,7 @@ public:
 
   constexpr TensorMeanOpDesc(const size_t &input1,
     const size_t &output1)
-    : OpDesc(TENSOR_MEAN_OP_ID, { input1 }, { output1 }, "Tensor Mean Op") {}
+    : OpDesc(TENSOR_MEAN_OP_ID, { input1 + 1 }, { output1 + 1 }, "Tensor Mean Op") {}
 };
 
 }
