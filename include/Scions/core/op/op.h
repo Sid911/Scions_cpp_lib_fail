@@ -21,6 +21,8 @@ class OpDesc {
 public:
   int32_t op_id;
   OpIOIndicesInfo info;
+  uint64_t num_inputs;
+  uint64_t num_outputs;
 
   /**
    * @brief Constructs an OpDesc object.
@@ -48,7 +50,10 @@ public:
     const std::array<const size_t, SC_OP_INPUT_MAX> &inp,
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &out,
     const std::string_view &desc)
-    : op_id(id), op_desc(desc), info({ inp, out }) {}
+    : op_id(id), op_desc(desc), info({ inp, out }) {
+    num_inputs = std::distance(inp.begin(),std::ranges::find(inp,0)) + 1;
+    num_outputs = std::distance(out.begin(),std::ranges::find(out,0)) + 1;
+  }
 
   /**
    * @brief Returns the description of the operation.

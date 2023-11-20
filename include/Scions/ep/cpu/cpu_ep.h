@@ -42,7 +42,7 @@ public:
   [[nodiscard(
     "Message: Returning object of CPUExecutionProvider.")]]
   constexpr CPUStaticExecutionProvider(
-    graph::SequentialGraph<Op, Mem> &graph_,
+    const graph::SequentialGraph<Op, Mem> &graph_,
     CpuMemoryManager<Mem, Size> &manager_,
     const CPUOptions &options_)
     : graph(graph_), options(options_), manager(manager_) {}
@@ -52,7 +52,8 @@ public:
   std::expected<CPUExecutionStats, std::string> executeGraph() {
     using namespace std::chrono;
     const auto start = high_resolution_clock::now();
-    for (op::OpDesc &op : graph.ops) { executeOp(op, static_memory); }
+
+    for (const op::OpDesc &op : graph.ops) { executeOp(op, manager); }
     const auto end      = high_resolution_clock::now();
     const auto duration = duration_cast<milliseconds>(end - start);
     return CPUExecutionStats{ duration };
@@ -60,7 +61,7 @@ public:
 
 private:
   const graph::SequentialGraph<Op, Mem> graph;
-  const CpuMemoryManager<Mem, Size> &manager;
+  CpuMemoryManager<Mem, Size> &manager;
   const CPUOptions options;
 
 };

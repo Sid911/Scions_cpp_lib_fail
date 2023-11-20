@@ -10,6 +10,8 @@ namespace scions::op {
 /**
  * @brief Structure that represents the input and output indices information for a particular operation.
  *
+ * Indexed by 1.
+ *
  * This structure holds the input and output indices for a given operation. The input indices are stored in
  * an array of size_t with a maximum size of SC_OP_INPUT_MAX, and the output indices are stored in a separate
  * array of size_t with a maximum size of SC_OP_OUTPUT_MAX.

@@ -9,14 +9,17 @@
 
 namespace scions::ep::cpu {
 template<size_t Mem, uint64_t Size>
-inline void executeOp(op::OpDesc &op, CpuMemoryManager<Mem, Size> &manager) {
+inline void executeOp(const op::OpDesc &op, CpuMemoryManager<Mem, Size> &manager) {
   using namespace scions::op::tensor;
+
   switch (op.op_id) {
   case TENSOR_ADD_OP_ID: _internal::tensorAdd(op, manager);
     break;
   case TENSOR_MULTIPLY_OP_ID: _internal::tensorMul(op, manager);
-  default: std::cout << "CPU EP: Op ID \"" << op.op_id << "\" Either not implemented in CPU EP"
-           << " or does not exist\n";
+    break;
+  default:
+    print(fg(fmt::color::blue_violet), "CPU EP: ");
+    fmt::print("Op ID \"{}\" Either not implemented in CPU EP or does not exist\n", op.op_id);
     throw std::runtime_error("Cpu EP: OP not found");
   }
 }

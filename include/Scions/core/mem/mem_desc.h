@@ -3,7 +3,6 @@
 //
 
 #pragma once
-#include "Scions/common/common.h"
 #include "mem_object.h"
 
 namespace scions::mem {
@@ -29,7 +28,7 @@ public:
    *
    * @tparam N The number of memory objects in the collection.
    */
-  constexpr MemDescriptor(const std::array<StaticMemObject, N> &objects)
+  constexpr MemDescriptor(const std::array<StaticMem, N> &objects)
     : memoryObjects() {
     uint64_t bytes = 0;
     for (int i = 0; i < N; i++) {
@@ -38,15 +37,19 @@ public:
           objects[i].name,
           i,
           bytes,
+          objects[i].dimension,
+          objects[i].shape,
           objects[i].data_type
           );
-      bytes+= objects[i].total_size;
+      bytes += objects[i].total_size;
     }
 
     total_bytes = bytes;
   }
 
-  [[nodiscard]] constexpr MemRef getRef(size_t index) const { return MemRef{ index, memoryObjects[index].name }; }
+  [[nodiscard]] constexpr MemRef getRef(size_t index) const {
+    return MemRef{ index, memoryObjects[index].name, memoryObjects[index].type };
+  }
 
   /**
    * @brief Get a reference to a memory object by name.
@@ -73,24 +76,13 @@ public:
         "memory object named " + std::string(search) + "not found"));
     }
 
-    return MemRef{ index, memoryObjects[index].name };
+    return MemRef{ index, memoryObjects[index].name, memoryObjects[index].type };
   }
 
   constexpr uint64_t getTotalBytes() const noexcept { return total_bytes; }
 
 private:
   uint64_t total_bytes;
-
-  static consteval std::array<MemObject, N>
-    buildMemObjects(const std::array<StaticMemObject, N> &obj) {
-    std::array<MemObject, N> temp;
-
-    for (int i = 0; i < N; i++) {
-      temp[i] =
-        MemObject(obj[i].total_size, obj[i].name, i, obj[i].data_type);
-    }
-    return temp;
-  }
 };
 
 } // namespace scions::mem
