@@ -11,7 +11,6 @@
 using namespace std;
 #define OP_SIZE 2
 
-
 template<size_t Mem, uint64_t Size>
 consteval auto executeCPUGraph(const auto& graph, const scions::ep::cpu::CpuMemoryManager<Mem, Size>& manager) {
     using namespace std::chrono;
@@ -64,7 +63,6 @@ int main() {
   static auto manager = cpu::CpuMemoryManager<mem_size, by>(desc);
 
   // auto provider = cpu::CPUStaticExecutionProvider<OP_SIZE, mem_size, by>(res, manager, options);
-
   cpu::CPUExecutionStats const stats = executeCPUGraph(res,manager);
   return 0;
 }
