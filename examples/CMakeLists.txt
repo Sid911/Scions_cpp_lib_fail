@@ -1,4 +1,3 @@
-
 add_executable(Gates gates.cpp)
 add_executable(Gates2 gates_v2.cpp)
 
