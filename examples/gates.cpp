@@ -17,7 +17,9 @@ consteval auto executeCPUGraph(const auto& graph, const scions::ep::cpu::CpuMemo
     using namespace scions;
     const auto start = high_resolution_clock::now();
 
-    for (const op::OpDesc &op : graph.ops) { ep::cpu::executeOp(op, manager); }
+    for (const op::OpDesc &op : graph.ops) {
+        ep::cpu::executeOp(op, manager);
+    }
     const auto end      = high_resolution_clock::now();
     const auto duration = duration_cast<milliseconds>(end - start);
     return ep::cpu::CPUExecutionStats{ duration };
@@ -26,43 +28,43 @@ consteval auto executeCPUGraph(const auto& graph, const scions::ep::cpu::CpuMemo
 // builds the graph at compile time
 [[nodiscard]] consteval auto buildGraph() {
 
-  // Alright here will be the example start
-  using namespace scions;
+    // Alright here will be the example start
+    using namespace scions;
 
-  static constexpr array mems = {
-    mem::StaticMem(1024, 1024, "inp1"),
-    mem::StaticMem(1024, 1024, "inp2"),
-    mem::StaticMem(1024, 1024, "inp3"),
-  };
+    static constexpr array mems = {
+        mem::StaticMem(1024, 1024, "inp1"),
+        mem::StaticMem(1024, 1024, "inp2"),
+        mem::StaticMem(1024, 1024, "inp3"),
+    };
 
-  constexpr mem::MemDescriptor desc = mem::MemDescriptor(mems);
+    constexpr mem::MemDescriptor desc = mem::MemDescriptor(mems);
 
-  static constexpr std::array<op::OpDesc, OP_SIZE> ops = {
-    op::tensor::TensorAddOpDesc(0, 1, 2),
-    op::tensor::TensorMultiplyOpDesc(0, 3, 2),
-  };
+    static constexpr std::array<op::OpDesc, OP_SIZE> ops = {
+        op::tensor::TensorAddOpDesc(0, 1, 2),
+        op::tensor::TensorMultiplyOpDesc(0, 3, 2),
+    };
 
-  constexpr graph::SequentialGraph graph = { ops, desc };
+    constexpr graph::SequentialGraph graph = { ops, desc };
 
-  return graph;
+    return graph;
 }
 
 int main() {
-  using namespace scions;
-  using namespace scions::ep;
-  // Compile time graph
-  static constexpr auto res   = buildGraph();
-  static constexpr auto &desc = res.memDescriptor;
-  static constexpr auto mem_size  = desc.memoryObjects.size();
-  static constexpr auto by    = desc.getTotalBytes();
+    using namespace scions;
+    using namespace scions::ep;
+    // Compile time graph
+    static constexpr auto res   = buildGraph();
+    static constexpr auto &desc = res.memDescriptor;
+    static constexpr auto mem_size  = desc.memoryObjects.size();
+    static constexpr auto by    = desc.getTotalBytes();
 
-  // set CPUExecutionProvider Options
-  constexpr cpu::CPUOptions options{ true };
-  // Note: Always set this to static if you don't want to blow past
-  // the stack size
-  static auto manager = cpu::CpuMemoryManager<mem_size, by>(desc);
+    // set CPUExecutionProvider Options
+    constexpr cpu::CPUOptions options{ true };
+    // Note: Always set this to static if you don't want to blow past
+    // the stack size
+    static auto manager = cpu::CpuMemoryManager<mem_size, by>(desc);
 
-  // auto provider = cpu::CPUStaticExecutionProvider<OP_SIZE, mem_size, by>(res, manager, options);
-  cpu::CPUExecutionStats const stats = executeCPUGraph(res,manager);
-  return 0;
+    // auto provider = cpu::CPUStaticExecutionProvider<OP_SIZE, mem_size, by>(res, manager, options);
+    cpu::CPUExecutionStats const stats = executeCPUGraph(res,manager);
+    return 0;
 }

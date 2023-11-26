@@ -15,7 +15,7 @@ enum TYPE {
     F64,
 };
 
-constexpr uint8_t getDTypeSizeBytes(const TYPE t){
+constexpr uint8_t getDTypeSizeBytes(const TYPE t) {
     switch (t) {
     case INT8:
         return sizeof(int8_t);
