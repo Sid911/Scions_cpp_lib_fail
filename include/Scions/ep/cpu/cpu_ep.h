@@ -49,7 +49,6 @@ public:
 
   // Todo: Constructor without manger passed in
 
-  template<>
   std::expected<CPUExecutionStats, std::string> executeGraph() {
     using namespace std::chrono;
     const auto start = high_resolution_clock::now();

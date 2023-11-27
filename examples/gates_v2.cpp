@@ -8,14 +8,11 @@
 #include <cstddef>
 #include <cstdint>
 #include <fmt/core.h>
-#include <iterator>
 #include <memory>
 #include <optional>
-#include <ranges>
 #include <type_traits>
-#include <utility>
 
-
+// NOLINTBEGIN
 #ifndef MANIFOLD_MAX_EXP_REF_INPUT
 #define MANIFOLD_MAX_EXP_REF_INPUT 5
 #endif
@@ -47,6 +44,7 @@
 #ifndef MANIFOLD_STATIC_GRAPH_MAX_OP
 #define MANIFOLD_STATIC_GRAPH_MAX_OP 10
 #endif
+// NOLINTEND
 
 namespace manifold {
 // Enumeration for data types
@@ -141,6 +139,7 @@ struct ShapeReflection {
     const std::array<std::uint32_t, MANIFOLD_MAX_RANK> &shape)
     : rank(rank), shape(shape) {}
 
+  // NOLINTBEGIN
   [[nodiscard]] constexpr ShapeReflection(const std::uint32_t size) : rank(1), shape({ size }) {}
 
   constexpr friend std::size_t hash_value(const ShapeReflection &obj) {
@@ -151,6 +150,7 @@ struct ShapeReflection {
     }
     return seed;
   }
+  // NOLINTEND
   [[nodiscard]] constexpr ShapeReflection(const std::uint32_t M, const std::uint32_t N) : rank(2), shape({ M, N }) {}
 };
 
@@ -162,7 +162,7 @@ struct TensorReflection {
   layout storage_layout;
   Store storage_type;
 
-  constexpr TensorReflection() : data_type(), size(0), id(0), shape(), storage_layout(), storage_type() {}
+  constexpr TensorReflection() : data_type(), size(0), id(0), storage_layout(), storage_type() {}
 
   [[nodiscard]] constexpr TensorReflection(const d_type data_type,
     const std::size_t size,
@@ -187,6 +187,7 @@ struct TensorReflection {
     : data_type(Type), size(Rows * Cols), id(mat.id), shape(Rows, Cols), storage_layout(layout::ROW_MAJOR),
       storage_type(Storage) {}
 
+  // NOLINTBEGIN
   constexpr friend std::size_t hash_value(const TensorReflection &obj) {
     std::size_t seed = 0x66D26DCF;
     seed ^= (seed << 6) + (seed >> 2) + 0x1B5EB086 + static_cast<std::size_t>(obj.data_type);
@@ -197,6 +198,7 @@ struct TensorReflection {
     seed ^= (seed << 6) + (seed >> 2) + 0x5167620F + static_cast<std::size_t>(obj.storage_type);
     return seed;
   }
+  // NOLINTEND
 };
 #pragma endregion
 
@@ -301,6 +303,7 @@ struct ExpressionReflection {
   [[nodiscard]] constexpr explicit ExpressionReflection(const TensorReflection &tensor)
     : type(), num_inputs(0), num_outputs(0), tensor(tensor) {}
 
+  // NOLINTBEGIN
   [[nodiscard]] constexpr bool isTensor() const { return tensor.has_value(); }
   constexpr friend std::size_t hash_value(const ExpressionReflection &obj) {
     std::size_t seed = 0x713065A4;
@@ -319,8 +322,10 @@ struct ExpressionReflection {
     }
     return seed;
   }
+  // NOLINTEND
 };
 
+template<size_t MaxInput = MANIFOLD_MAX_EXP_INPUT, size_t MaxOutput = MANIFOLD_MAX_EXP_OUTPUT>
 struct Expression {
   OpType type;
   uint64_t id;
@@ -335,15 +340,15 @@ struct Expression {
   [[nodiscard]] constexpr Expression(const OpType type,
     const uint64_t id,
     const uint32_t num_inputs,
-    const std::array<std::uint32_t, MANIFOLD_MAX_EXP_INPUT> &input_indices,
+    const std::array<std::uint32_t, MaxInput> &input_indices,
     const uint32_t num_outputs,
-    const std::array<std::uint32_t, MANIFOLD_MAX_EXP_OUTPUT> &output_indices)
+    const std::array<std::uint32_t, MaxOutput> &output_indices)
     : type(type), id(id), num_inputs(num_inputs), num_outputs(num_outputs), input_indices(input_indices),
       output_indices(output_indices), hash(0) {
     // do no initialize in constructor
     hash = hash_value(*this);
   }
-
+  // NOLINTBEGIN
   constexpr friend std::size_t hash_value(const Expression &obj) {
     if (obj.hash != 0) { return obj.hash; }
     std::size_t seed = 0x071EF957;
@@ -359,18 +364,31 @@ struct Expression {
     }
     return seed;
   }
+  // NOLINTEND
+};
 
-  void print() {
-    fmt::print(
-      "{}:\nid: {}\nnum_inputs: {}\nnum_outputs: {}\nhash : {}\n", to_string(type), id, num_inputs, num_outputs, hash);
-    fmt::print("Inputs : ");
-    for (int i = 0; i < num_inputs; ++i) { fmt::print("{} ", input_indices[i]); }
-    fmt::print("\nOutputs :");
-    for (int i = 0; i < num_outputs; ++i) { fmt::print("{} ", output_indices[i]); }
-    fmt::print("\n");
+template<size_t CMaxInput, size_t CMaxOutput>
+struct CompactExpression {
+  OpType type;
+  uint64_t id;
+  std::array<std::uint32_t, CMaxInput> input_indices;
+  std::array<std::uint32_t, CMaxOutput> output_indices;
+  std::size_t hash;
+
+  constexpr CompactExpression() = default;
+
+  template<size_t MaxInput_ = MANIFOLD_MAX_EXP_INPUT, size_t MaxOutput_ = MANIFOLD_MAX_EXP_OUTPUT>
+  explicit constexpr CompactExpression(const Expression<MaxInput_, MaxOutput_> &exp)
+    : type(exp.type), id(exp.id), input_indices(), output_indices(), hash(exp.hash) {
+    for (size_t i = 0; i < exp.num_inputs && i < CMaxInput; i++) { input_indices.at(i) = exp.input_indices.at(i); }
+
+    for (size_t i = 0; i < exp.num_outputs && i < CMaxOutput; i++) { output_indices.at(i) = exp.output_indices.at(i); }
   }
 };
+
 #pragma endregion
+
+
 #pragma region Manifold concepts
 namespace _internal {
   template<typename T>
@@ -481,13 +499,13 @@ ExpressionReflection array_sub(const T &out, const std::array<T, N> &inp)
 template<std::uint16_t DataLen, std::uint16_t ExpLen>
 constexpr uint32_t extractRefs(const ExpressionReflection *exp_ref,
   std::array<TensorReflection, DataLen> &data,
-  std::array<Expression, ExpLen> &exp_arr,
+  std::array<Expression<>, ExpLen> &exp_arr,
   std::uint16_t &data_len,
   std::uint16_t &exp_len) {
   if (exp_ref->isTensor()) {
     // Check if exp_ref_tensor.value().id is already in data:
-    auto it =
-      std::ranges::find_if(data, [id = exp_ref->tensor.value().id](const TensorReflection &tr) { return tr.id == id; });
+    auto it = std::ranges::find_if(
+      data, [id = exp_ref->tensor.value().id](const TensorReflection &ten) { return ten.id == id; });
 
     if (it == data.end()) {
       data.at(data_len++) = exp_ref->tensor.value();
@@ -511,25 +529,28 @@ constexpr uint32_t extractRefs(const ExpressionReflection *exp_ref,
   }
   auto expression = Expression(exp_ref->type, id, exp_ref->num_inputs, input_arr, exp_ref->num_outputs, output_arr);
   auto it =
-    std::ranges::find_if(exp_arr, [hash = expression.hash](const Expression &e) { return hash_value(e) == hash; });
+    std::ranges::find_if(exp_arr, [hash = expression.hash](const Expression<> &e) { return hash_value(e) == hash; });
   if (it == exp_arr.end()) {
-    exp_arr.at(exp_len++) = std::move(expression);
+    exp_arr.at(exp_len++) = expression;
     return exp_len;
   }
   return std::distance(exp_arr.begin(), it);
 }
 
-template<std::uint16_t DataLen = MANIFOLD_STATIC_GRAPH_MAX_MEM, std::uint16_t ExpLen = MANIFOLD_STATIC_GRAPH_MAX_OP>
+template<std::uint16_t DataLen = MANIFOLD_STATIC_GRAPH_MAX_MEM,
+  std::uint16_t ExpLen         = MANIFOLD_STATIC_GRAPH_MAX_OP,
+  size_t MaxInput              = MANIFOLD_MAX_EXP_INPUT,
+  size_t MaxOutput             = MANIFOLD_MAX_EXP_OUTPUT>
 struct StaticGraph {
   std::uint16_t data_len;
   std::uint16_t exp_len;
   std::array<TensorReflection, DataLen> data;
-  std::array<Expression, ExpLen> expressions;
+  std::array<Expression<MaxInput, MaxOutput>, ExpLen> expressions;
 
   [[nodiscard]] constexpr StaticGraph(const std::uint16_t data_len,
     std::array<TensorReflection, DataLen> data_,
     const std::uint16_t exp_len,
-    std::array<Expression, ExpLen> expressions_)
+    std::array<Expression<MaxInput, MaxOutput>, ExpLen> expressions_)
     : data_len(data_len), exp_len(exp_len), data(std::move(data_)), expressions(std::move(expressions_)) {}
 
   template<size_t N>
@@ -541,15 +562,53 @@ struct StaticGraph {
   }
 };
 
+struct CompConstrains {
+  size_t exp_in_size;
+  size_t exp_out_size;
+  size_t graph_op_size;
+  size_t graph_data_size;
+};
+
+template<std::uint16_t CDataLen, std::uint16_t CExpLen, size_t CMaxInput, size_t CMaxOutput>
+struct CompactStaticGraph {
+  std::array<TensorReflection, CDataLen> data;
+  std::array<CompactExpression<CMaxInput, CMaxOutput>, CExpLen> expressions;
+
+  template<std::uint16_t DataLen_, std::uint16_t ExpLen_, size_t MaxInput_, size_t MaxOutput_>
+  constexpr explicit CompactStaticGraph(const StaticGraph<DataLen_, ExpLen_, MaxInput_, MaxOutput_> &other)
+    : data(), expressions() {
+    for (size_t i = 0; i < DataLen_ && i < other.data_len; i++) { data[i] = other.data.at(i); }
+    for (size_t i = 0; i < CExpLen && i < other.exp_len; i++) {
+      expressions.at(i) = CompactExpression<CMaxInput, CMaxOutput>(other.expressions.at(i));
+    }
+  }
+};
+
+template<uint16_t DataLen, uint16_t ExpLen>
+consteval auto genConstrains(const StaticGraph<DataLen, ExpLen> &inp_graph) {
+  size_t max_exp_in  = 0;
+  size_t max_exp_out = 0;
+  for (int i = 0; i < inp_graph.exp_len; ++i) {
+    auto &exp   = inp_graph.expressions.at(i);
+    max_exp_in  = exp.num_inputs > max_exp_in ? exp.num_inputs : max_exp_in;
+    max_exp_out = exp.num_outputs > max_exp_out ? exp.num_outputs : max_exp_out;
+  }
+  return CompConstrains{ max_exp_in, max_exp_out, inp_graph.exp_len, inp_graph.data_len };
+}
+
+template<CompConstrains C, std::uint16_t DataLen_, std::uint16_t ExpLen_, size_t MaxInput_, size_t MaxOutput_>
+constexpr auto compact(const StaticGraph<DataLen_, ExpLen_, MaxInput_, MaxOutput_> &inp_graph) {
+  return CompactStaticGraph<C.graph_data_size, C.graph_op_size, C.exp_in_size, C.exp_out_size>(inp_graph);
+}
 }  // namespace manifold
 
 
 template<>
-struct fmt::formatter<manifold::Expression> {
+struct fmt::formatter<manifold::Expression<>> {
   constexpr auto parse(format_parse_context &ctx) { return ctx.begin(); }
 
   template<typename FormatContext>
-  constexpr auto format(const manifold::Expression &exp, FormatContext &ctx) {
+  constexpr auto format(const manifold::Expression<> &exp, FormatContext &ctx) {
     format_to(ctx.out(),
       "{}:\nid: {}\nnum_inputs: {}\nnum_outputs: {}\nhash: {}\n",
       to_string(exp.type),
@@ -558,13 +617,33 @@ struct fmt::formatter<manifold::Expression> {
       exp.num_outputs,
       exp.hash);
     format_to(ctx.out(), "Inputs: ");
-    for (int i = 0; i < exp.num_inputs; ++i) { format_to(ctx.out(), "{} ", exp.input_indices[i]); }
+    for (int i = 0; i < exp.num_inputs; ++i) { format_to(ctx.out(), "{} ", exp.input_indices.at(i)); }
     format_to(ctx.out(), "\nOutputs: ");
-    for (int i = 0; i < exp.num_outputs; ++i) { format_to(ctx.out(), "{} ", exp.output_indices[i]); }
+    for (int i = 0; i < exp.num_outputs; ++i) { format_to(ctx.out(), "{} ", exp.output_indices.at(i)); }
     return format_to(ctx.out(), "\n");
   }
 };
 
+template<size_t MaxInput, size_t MaxOutput>
+struct fmt::formatter<manifold::CompactExpression<MaxInput, MaxOutput>> {
+  constexpr auto parse(format_parse_context &ctx) { return ctx.begin(); }
+
+  template<typename FormatContext>
+  constexpr auto format(const manifold::CompactExpression<MaxInput, MaxOutput> &exp, FormatContext &ctx) {
+    format_to(ctx.out(),
+      "{}:\nid: {}\nInSize: {}\nOutSize: {}\nhash: {}\n",
+      to_string(exp.type),
+      exp.id,
+      MaxInput,
+      MaxOutput,
+      exp.hash);
+    format_to(ctx.out(), "Inputs: ");
+    for (auto index : exp.input_indices) { format_to(ctx.out(), "{} ", index); }
+    format_to(ctx.out(), "\nOutputs: ");
+    for (auto index : exp.output_indices) { format_to(ctx.out(), "{} ", index); }
+    return format_to(ctx.out(), "\n");
+  }
+};
 
 consteval auto buildGraph() noexcept {
 
@@ -582,15 +661,18 @@ consteval auto buildGraph() noexcept {
   auto add_1_2         = array_add(ten_arr, std::array{ arr1, arr2 });
   auto mul_1_2         = array_mul(arr3, std::array{ arr1, arr2, ten_arr });
   const std::array exp = { &add_1_2, &mul_1_2, &add_1_2 };
-  return StaticGraph<4, 2>(exp);
+  return StaticGraph(exp);
 }
 
 int main() noexcept {
-  static constexpr auto res = buildGraph();
+  constexpr auto res            = buildGraph();
+  constexpr auto con            = genConstrains(res);
+  static constexpr auto compact = manifold::compact<con>(res);
+
   fmt::print("Tensor IDs : \n");
-  for (const auto &data : res.data) { fmt::print("{}\n", data.id); }
+  for (const auto &data : compact.data) { fmt::print("{}\n", data.id); }
   fmt::print("\nExpression hashes: \n");
-  for (int i = 0; i < res.exp_len; ++i) { fmt::print("{}\n", res.expressions.at(i)); }
-  fmt::print("size of Expression Array {}\n", sizeof(decltype(res)));
+  for (const auto &exp : compact.expressions) { fmt::print("{}\n", exp); }
+  fmt::print("Compact Static Graph vs Non = {}:{}\n", sizeof(decltype(res)), sizeof(decltype(compact)));
   return 0;
 }

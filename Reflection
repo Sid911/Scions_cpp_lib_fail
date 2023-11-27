@@ -1,0 +1,21 @@
+Expression:
+  - OpType     : The type of operation it is
+  - Inputs     : Predefined length Expressions array
+  - NumInputs  : Number of Inputs
+  - Outputs    : Predefined length Expressions array
+  - NumOutputs : Number of Outputs
+  
+  // Should also be able to represent a tensor
+  // as a tensor is a leaf node almost in this tree
+  - isTensor() -> bool
+  - Optional<TensorReflection>
+
+TensorReflection :
+  - DataType        : Data Type of the tensor
+  - Size            : total elements in the tensor
+  - ShapeReflection : Shape of the tensor
+  - Layout          : Layout of the tensor
+  - Storage         : Where the tensor should be allocated
+
+ShapeReflection: 
+  - 
