@@ -21,6 +21,7 @@ endmacro()
 macro(Scions_setup_options)
   option(Scions_ENABLE_HARDENING "Enable hardening" OFF)
   option(Scions_ENABLE_COVERAGE "Enable coverage reporting" OFF)
+  option(Scions_BUILD_EXAMPLE "Enable building of examples" ON)
   cmake_dependent_option(
     Scions_ENABLE_GLOBAL_HARDENING
     "Attempt to push hardening options to built dependencies"
@@ -46,17 +47,17 @@ macro(Scions_setup_options)
     option(Scions_ENABLE_CACHE "Enable ccache" ON)
   else()
     option(Scions_ENABLE_IPO "Enable IPO/LTO" ON)
-    option(Scions_WARNINGS_AS_ERRORS "Treat Warnings As Errors" ON)
-    option(Scions_ENABLE_USER_LINKER "Enable user-selected linker" OFF)
+    option(Scions_WARNINGS_AS_ERRORS "Treat Warnings As Errors" OFF)
+    option(Scions_ENABLE_USER_LINKER "Enable user-selected linker" ON)
     option(Scions_ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" ${SUPPORTS_ASAN})
     option(Scions_ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
     option(Scions_ENABLE_SANITIZER_UNDEFINED "Enable undefined sanitizer" ${SUPPORTS_UBSAN})
     option(Scions_ENABLE_SANITIZER_THREAD "Enable thread sanitizer" OFF)
     option(Scions_ENABLE_SANITIZER_MEMORY "Enable memory sanitizer" OFF)
     option(Scions_ENABLE_UNITY_BUILD "Enable unity builds" OFF)
-    option(Scions_ENABLE_CLANG_TIDY "Enable clang-tidy" ON)
-    option(Scions_ENABLE_CPPCHECK "Enable cpp-check analysis" ON)
-    option(Scions_ENABLE_PCH "Enable precompiled headers" OFF)
+    option(Scions_ENABLE_CLANG_TIDY "Enable clang-tidy" OFF)
+    option(Scions_ENABLE_CPPCHECK "Enable cpp-check analysis" OFF)
+    option(Scions_ENABLE_PCH "Enable precompiled headers" ON)
     option(Scions_ENABLE_CACHE "Enable ccache" ON)
   endif()
 
@@ -99,7 +100,7 @@ macro(Scions_global_options)
 
   if(Scions_ENABLE_HARDENING AND Scions_ENABLE_GLOBAL_HARDENING)
     include(cmake/Hardening.cmake)
-    if(NOT SUPPORTS_UBSAN 
+    if(NOT SUPPORTS_UBSAN
        OR Scions_ENABLE_SANITIZER_UNDEFINED
        OR Scions_ENABLE_SANITIZER_ADDRESS
        OR Scions_ENABLE_SANITIZER_THREAD
@@ -153,7 +154,6 @@ macro(Scions_local_options)
       <vector>
       <string>
       <utility>
-      <exceptions>
     )
   endif()
 
@@ -187,7 +187,7 @@ macro(Scions_local_options)
 
   if(Scions_ENABLE_HARDENING AND NOT Scions_ENABLE_GLOBAL_HARDENING)
     include(cmake/Hardening.cmake)
-    if(NOT SUPPORTS_UBSAN 
+    if(NOT SUPPORTS_UBSAN
        OR Scions_ENABLE_SANITIZER_UNDEFINED
        OR Scions_ENABLE_SANITIZER_ADDRESS
        OR Scions_ENABLE_SANITIZER_THREAD
