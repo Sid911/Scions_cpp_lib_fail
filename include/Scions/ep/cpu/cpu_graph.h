@@ -20,6 +20,4 @@ namespace scions::ep::cpu::_internal {
 // };
 }
 
-namespace scions::ep::cpu {
-
-}
+namespace scions::ep::cpu {}

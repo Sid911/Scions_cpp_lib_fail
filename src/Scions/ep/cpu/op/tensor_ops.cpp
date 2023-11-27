@@ -3,5 +3,4 @@
 //
 #include "Scions/ep/cpu/op/tensor_ops.h"
 
-namespace scions::ep::cpu::_internal {
-}
+namespace scions::ep::cpu::_internal {}
