@@ -13,20 +13,20 @@
 #include "mkl.h"
 
 constexpr std::string formatBytes(const size_t bytes) {
-  constexpr std::array units{ "b", "KiB", "MiB", "GiB", "TiB" };
-  size_t i    = 0;
-  double size = static_cast<double>(bytes);
-  while (size > 1024 && i < 5) {
-    size /= 1024;
-    i++;
-  }
-  return fmt::format("{:.2f} {}", size, units[i]);
+    constexpr std::array units{ "b", "KiB", "MiB", "GiB", "TiB" };
+    size_t i    = 0;
+    double size = static_cast<double>(bytes);
+    while (size > 1024 && i < 5) {
+        size /= 1024;
+        i++;
+    }
+    return fmt::format("{:.2f} {}", size, units[i]);
 }
 
 
 namespace scions::ep::cpu {
 struct CPUOptions {
-  bool is_debug = false;
+    bool is_debug = false;
 };
 
 /* # Todo : Make Memory Engine which manages memory
@@ -39,31 +39,33 @@ struct CPUOptions {
 template<size_t Op, size_t Mem, uint64_t Size>
 class CPUStaticExecutionProvider {
 public:
-  [[nodiscard(
-    "Message: Returning object of CPUExecutionProvider.")]]
-  constexpr CPUStaticExecutionProvider(
-    const graph::SequentialGraph<Op, Mem> &graph_,
-    CpuMemoryManager<Mem, Size> &manager_,
-    const CPUOptions &options_)
-    : graph(graph_), options(options_), manager(manager_) {}
+    [[nodiscard(
+          "Message: Returning object of CPUExecutionProvider.")]]
+    constexpr CPUStaticExecutionProvider(
+        const graph::SequentialGraph<Op, Mem> &graph_,
+        CpuMemoryManager<Mem, Size> &manager_,
+        const CPUOptions &options_)
+        : graph(graph_), options(options_), manager(manager_) {}
 
-  // Todo: Constructor without manger passed in
+    // Todo: Constructor without manger passed in
 
-  template<>
-  std::expected<CPUExecutionStats, std::string> executeGraph() {
-    using namespace std::chrono;
-    const auto start = high_resolution_clock::now();
+    template<>
+    std::expected<CPUExecutionStats, std::string> executeGraph() {
+        using namespace std::chrono;
+        const auto start = high_resolution_clock::now();
 
-    for (const op::OpDesc &op : graph.ops) { executeOp(op, manager); }
-    const auto end      = high_resolution_clock::now();
-    const auto duration = duration_cast<milliseconds>(end - start);
-    return CPUExecutionStats{ duration };
-  }
+        for (const op::OpDesc &op : graph.ops) {
+            executeOp(op, manager);
+        }
+        const auto end      = high_resolution_clock::now();
+        const auto duration = duration_cast<milliseconds>(end - start);
+        return CPUExecutionStats{ duration };
+    }
 
 private:
-  const graph::SequentialGraph<Op, Mem> graph;
-  CpuMemoryManager<Mem, Size> &manager;
-  const CPUOptions options;
+    const graph::SequentialGraph<Op, Mem> graph;
+    CpuMemoryManager<Mem, Size> &manager;
+    const CPUOptions options;
 
 };
 

@@ -11,7 +11,7 @@
 namespace scions::graph {
 template<size_t Ops, size_t Mem>
 struct SequentialGraph {
-  std::array<op::OpDesc, Ops> ops;
-  mem::MemDescriptor<Mem> memDescriptor;
+    std::array<op::OpDesc, Ops> ops;
+    mem::MemDescriptor<Mem> memDescriptor;
 };
 }
