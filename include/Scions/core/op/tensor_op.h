@@ -14,9 +14,7 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
     : OpDesc(TENSOR_ADD_OP_ID, input, output, "Tensor Add Op") {}
 
-  constexpr TensorAddOpDesc(const size_t &input1,
-    const size_t &input2,
-    const size_t &output1)
+  constexpr TensorAddOpDesc(const size_t &input1, const size_t &input2, const size_t &output1)
     : OpDesc(TENSOR_ADD_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Add Op") {}
 };
 
@@ -26,9 +24,7 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
     : OpDesc(TENSOR_SUBTRACT_OP_ID, input, output, "Tensor Subtract Op") {}
 
-  constexpr TensorSubtractOpDesc(const size_t &input1,
-    const size_t &input2,
-    const size_t &output1)
+  constexpr TensorSubtractOpDesc(const size_t &input1, const size_t &input2, const size_t &output1)
     : OpDesc(TENSOR_SUBTRACT_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Subtract Op") {}
 };
 
@@ -39,9 +35,7 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
     : OpDesc(TENSOR_MULTIPLY_OP_ID, input, output, "Tensor Multiply Op") {}
 
-  constexpr TensorMultiplyOpDesc(const size_t &input1,
-    const size_t &input2,
-    const size_t &output1)
+  constexpr TensorMultiplyOpDesc(const size_t &input1, const size_t &input2, const size_t &output1)
     : OpDesc(TENSOR_MULTIPLY_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Multiply Op") {}
 };
 
@@ -52,9 +46,7 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
     : OpDesc(TENSOR_DIVIDE_OP_ID, input, output, "Tensor Divide Op") {}
 
-  constexpr TensorDivideOpDesc(const size_t &input1,
-    const size_t &input2,
-    const size_t &output1)
+  constexpr TensorDivideOpDesc(const size_t &input1, const size_t &input2, const size_t &output1)
     : OpDesc(TENSOR_DIVIDE_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Divide Op") {}
 };
 
@@ -65,9 +57,7 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
     : OpDesc(TENSOR_EXPONENTIATION_OP_ID, input, output, "Tensor Exponentiate Op") {}
 
-  constexpr TensorExponentiateOpDesc(const size_t &input1,
-    const size_t &input2,
-    const size_t &output1)
+  constexpr TensorExponentiateOpDesc(const size_t &input1, const size_t &input2, const size_t &output1)
     : OpDesc(TENSOR_EXPONENTIATION_OP_ID, { input1 + 1, input2 + 1 }, { output1 + 1 }, "Tensor Exponentiate Op") {}
 };
 
@@ -78,8 +68,7 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
     : OpDesc(TENSOR_LOG_OP_ID, input, output, "Tensor Log Op") {}
 
-  constexpr TensorLogOpDesc(const size_t &input1,
-    const size_t &output1)
+  constexpr TensorLogOpDesc(const size_t &input1, const size_t &output1)
     : OpDesc(TENSOR_LOG_OP_ID, { input1 + 1 }, { output1 + 1 }, "Tensor Log Op") {}
 };
 
@@ -91,8 +80,7 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
     : OpDesc(TENSOR_SQUARE_ROOT_OP_ID, input, output, "Tensor Square Root Op") {}
 
-  constexpr TensorSquareRootOpDesc(const size_t &input1,
-    const size_t &output1)
+  constexpr TensorSquareRootOpDesc(const size_t &input1, const size_t &output1)
     : OpDesc(TENSOR_SQUARE_ROOT_OP_ID, { input1 + 1 }, { output1 + 1 }, "Tensor Square Root Op") {}
 };
 
@@ -103,9 +91,8 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
     : OpDesc(TENSOR_MEAN_OP_ID, input, output, "Tensor Mean Op") {}
 
-  constexpr TensorMeanOpDesc(const size_t &input1,
-    const size_t &output1)
+  constexpr TensorMeanOpDesc(const size_t &input1, const size_t &output1)
     : OpDesc(TENSOR_MEAN_OP_ID, { input1 + 1 }, { output1 + 1 }, "Tensor Mean Op") {}
 };
 
-}
+}  // namespace scions::op::tensor

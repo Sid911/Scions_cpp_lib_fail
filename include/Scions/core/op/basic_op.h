@@ -19,19 +19,12 @@ public:
 
 class MemFillRandom : public OpDesc {
 public:
-  constexpr MemFillRandom(
-    const std::array<const size_t, SC_OP_INPUT_MAX> &input,
+  constexpr MemFillRandom(const std::array<const size_t, SC_OP_INPUT_MAX> &input,
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &output)
-    : OpDesc(MEM_FILL_RANDOM_OP_ID,
-      input,
-      output,
-      "Memory Fill Random Op") {}
+    : OpDesc(MEM_FILL_RANDOM_OP_ID, input, output, "Memory Fill Random Op") {}
 
   constexpr MemFillRandom(const size_t &input1, const size_t &output)
-    : OpDesc(MEM_FILL_RANDOM_OP_ID,
-      { input1 },
-      { output },
-      "Memory Fill Random Op") {}
+    : OpDesc(MEM_FILL_RANDOM_OP_ID, { input1 }, { output }, "Memory Fill Random Op") {}
 };
 
 class MemFree : public OpDesc {
@@ -44,4 +37,4 @@ public:
     : OpDesc(MEM_FREE_OP_ID, { input1 }, { output }, "Memory Free Op") {}
 };
 
-} // namespace scions::op::mem
+}  // namespace scions::op::mem

@@ -28,19 +28,11 @@ public:
    *
    * @tparam N The number of memory objects in the collection.
    */
-  constexpr MemDescriptor(const std::array<StaticMem, N> &objects)
-    : memoryObjects() {
+  constexpr MemDescriptor(const std::array<StaticMem, N> &objects) : memoryObjects() {
     uint64_t bytes = 0;
     for (int i = 0; i < N; i++) {
-      memoryObjects[i] =
-        MemObject(objects[i].total_size,
-          objects[i].name,
-          i,
-          bytes,
-          objects[i].dimension,
-          objects[i].shape,
-          objects[i].data_type
-          );
+      memoryObjects[i] = MemObject(
+        objects[i].total_size, objects[i].name, i, bytes, objects[i].dimension, objects[i].shape, objects[i].data_type);
       bytes += objects[i].total_size;
     }
 
@@ -72,8 +64,7 @@ public:
       }
     }
     if (index == -1) {
-      throw std::runtime_error(std::string(
-        "memory object named " + std::string(search) + "not found"));
+      throw std::runtime_error(std::string("memory object named " + std::string(search) + "not found"));
     }
 
     return MemRef{ index, memoryObjects[index].name, memoryObjects[index].type };
@@ -85,5 +76,5 @@ private:
   uint64_t total_bytes;
 };
 
-} // namespace scions::mem
+}  // namespace scions::mem
 // mem

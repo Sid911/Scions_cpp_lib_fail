@@ -100,7 +100,7 @@ macro(Scions_global_options)
 
   if(Scions_ENABLE_HARDENING AND Scions_ENABLE_GLOBAL_HARDENING)
     include(cmake/Hardening.cmake)
-    if(NOT SUPPORTS_UBSAN 
+    if(NOT SUPPORTS_UBSAN
        OR Scions_ENABLE_SANITIZER_UNDEFINED
        OR Scions_ENABLE_SANITIZER_ADDRESS
        OR Scions_ENABLE_SANITIZER_THREAD
@@ -187,7 +187,7 @@ macro(Scions_local_options)
 
   if(Scions_ENABLE_HARDENING AND NOT Scions_ENABLE_GLOBAL_HARDENING)
     include(cmake/Hardening.cmake)
-    if(NOT SUPPORTS_UBSAN 
+    if(NOT SUPPORTS_UBSAN
        OR Scions_ENABLE_SANITIZER_UNDEFINED
        OR Scions_ENABLE_SANITIZER_ADDRESS
        OR Scions_ENABLE_SANITIZER_THREAD

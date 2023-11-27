@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include "cpu_execution_stats.h"
-#include "op/execute_op.h"
 #include "Scions/core/op/op.h"
 #include "Scions/ep/common/common.h"
 #include "Scions/ep/common/runtime_sequential_graph.h"
 #include "Scions/ep/cpu/mem/mem_manager.h"
+#include "cpu_execution_stats.h"
 #include "mkl.h"
+#include "op/execute_op.h"
 
 constexpr std::string formatBytes(const size_t bytes) {
   constexpr std::array units{ "b", "KiB", "MiB", "GiB", "TiB" };
@@ -39,9 +39,7 @@ struct CPUOptions {
 template<size_t Op, size_t Mem, uint64_t Size>
 class CPUStaticExecutionProvider {
 public:
-  [[nodiscard(
-    "Message: Returning object of CPUExecutionProvider.")]]
-  constexpr CPUStaticExecutionProvider(
+  [[nodiscard("Message: Returning object of CPUExecutionProvider.")]] constexpr CPUStaticExecutionProvider(
     const graph::SequentialGraph<Op, Mem> &graph_,
     CpuMemoryManager<Mem, Size> &manager_,
     const CPUOptions &options_)
@@ -64,7 +62,6 @@ private:
   const graph::SequentialGraph<Op, Mem> graph;
   CpuMemoryManager<Mem, Size> &manager;
   const CPUOptions options;
-
 };
 
-} // namespace scions::ep::cpu
+}  // namespace scions::ep::cpu

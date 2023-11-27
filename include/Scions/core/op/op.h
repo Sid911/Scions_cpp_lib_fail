@@ -15,7 +15,8 @@ namespace scions::op {
  * @class OpDesc
  * @brief Represents the description of an operation.
  *
- * This class contains the information about an operation, including its unique identifier, input and output indices, and description.
+ * This class contains the information about an operation, including its unique identifier, input and output indices,
+ * and description.
  */
 class OpDesc {
 public:
@@ -51,8 +52,8 @@ public:
     const std::array<const size_t, SC_OP_OUTPUT_MAX> &out,
     const std::string_view &desc)
     : op_id(id), op_desc(desc), info({ inp, out }) {
-    num_inputs = std::distance(inp.begin(),std::ranges::find(inp,0)) + 1;
-    num_outputs = std::distance(out.begin(),std::ranges::find(out,0)) + 1;
+    num_inputs  = std::distance(inp.begin(), std::ranges::find(inp, 0)) + 1;
+    num_outputs = std::distance(out.begin(), std::ranges::find(out, 0)) + 1;
   }
 
   /**
@@ -68,5 +69,5 @@ private:
   const std::string_view op_desc;
 };
 
-} // namespace scions::op
+}  // namespace scions::op
 // op

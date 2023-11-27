@@ -4,8 +4,8 @@
 #pragma once
 
 #include "Scions/core/op/op.h"
-#include "Scions/ep/cpu/mem/mem_manager.h"
 #include "Scions/ep/common/common.h"
+#include "Scions/ep/cpu/mem/mem_manager.h"
 
 namespace scions::ep::cpu::_internal {
 template<size_t Mem, uint64_t Size>
@@ -16,12 +16,10 @@ void tensorAdd(const op::OpDesc &desc, CpuMemoryManager<Mem, Size> &manager) {
   const auto numOutputs = desc.num_outputs;
 
   if (numInputs == 2 && numOutputs == 1) {
-    const CpuMemRef& one_ref = manager.mem_refs.at(inputs[0]);
-    const CpuMemRef& two_ref = manager.mem_refs.at(inputs[1]);
-    const CpuMemRef& out_ref = manager.mem_refs.at(outputs[0]);
-
+    const CpuMemRef &one_ref = manager.mem_refs.at(inputs[0]);
+    const CpuMemRef &two_ref = manager.mem_refs.at(inputs[1]);
+    const CpuMemRef &out_ref = manager.mem_refs.at(outputs[0]);
   }
-
 }
 
 template<size_t Mem, uint64_t Size>
@@ -30,11 +28,15 @@ void tensorMul(const op::OpDesc &desc, CpuMemoryManager<Mem, Size> &manager) {
   auto &outputs = desc.info.outputs;
 
   fmt::print("Inputs :");
-  for (size_t input : inputs) { if (input) fmt::print(" {} ", input); }
+  for (size_t input : inputs) {
+    if (input) fmt::print(" {} ", input);
+  }
   fmt::print("\n");
 
   fmt::print("Outputs :");
-  for (size_t output : outputs) { if (output) fmt::print(" {} ", output); }
+  for (size_t output : outputs) {
+    if (output) fmt::print(" {} ", output);
+  }
   fmt::print("\n");
 }
-}
+}  // namespace scions::ep::cpu::_internal

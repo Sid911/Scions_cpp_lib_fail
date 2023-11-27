@@ -28,4 +28,4 @@ struct OpIONameInfo {
   const std::array<const std::string_view, SC_OP_INPUT_MAX> inputs;
   const std::array<const std::string_view, SC_OP_OUTPUT_MAX> outputs;
 };
-} // namespace scions::op
+}  // namespace scions::op

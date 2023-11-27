@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#include "Scions/ep/common/common.h"
 #include "Scions/core/mem/mem_desc.h"
+#include "Scions/ep/common/common.h"
 
 namespace scions::ep::cpu {
 namespace _internal {
@@ -14,7 +14,7 @@ namespace _internal {
     std::span<const uint32_t> shape;
     uint32_t dimension;
   };
-}
+}  // namespace _internal
 
 template<size_t Mem, uint64_t StaticSize>
 class CpuMemoryManager {
@@ -25,8 +25,7 @@ public:
   // Not used as of now
   // std::vector<std::shared_ptr<uint8_t[]>> dynamic_memory;
 
-  CpuMemoryManager(const mem::MemDescriptor<Mem> d_)
-    : descriptor(d_), static_memory() {
+  CpuMemoryManager(const mem::MemDescriptor<Mem> d_) : descriptor(d_), static_memory() {
     mem_refs.reserve(descriptor.memoryObjects.size());
     for (size_t i = 0; const mem::MemObject &obj : descriptor.memoryObjects) {
       const auto ref_span   = std::span<uint8_t>(static_memory.begin() + obj.offset, obj.bytes);
@@ -41,10 +40,7 @@ public:
     const auto &obj = descriptor.memoryObjects.at(index);
     fmt::println("CpuMemManager: offset = {}", obj.offset);
     fmt::println("CpuMemManager: bytes = {}, size = {}", obj.bytes, obj.bytes / sizeof(T));
-    auto span = std::span<T>(
-      reinterpret_cast<T *>(static_memory.data() + obj.offset),
-      obj.bytes / sizeof(T)
-      );
+    auto span = std::span<T>(reinterpret_cast<T *>(static_memory.data() + obj.offset), obj.bytes / sizeof(T));
     return span;
   }
 
@@ -53,4 +49,4 @@ public:
 private:
   const mem::MemDescriptor<Mem> descriptor;
 };
-} // namespace scions::ep::cpu
+}  // namespace scions::ep::cpu
