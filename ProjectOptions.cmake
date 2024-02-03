@@ -14,14 +14,16 @@ macro(Scions_supports_sanitizers)
   if((CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*" OR CMAKE_CXX_COMPILER_ID MATCHES ".*GNU.*") AND WIN32)
     set(SUPPORTS_ASAN OFF)
   else()
-    set(SUPPORTS_ASAN ON)
+    set(SUPPORTS_ASAN OFF) # Turn it off
   endif()
 endmacro()
+
 
 macro(Scions_setup_options)
   option(Scions_ENABLE_HARDENING "Enable hardening" OFF)
   option(Scions_ENABLE_COVERAGE "Enable coverage reporting" OFF)
   option(Scions_BUILD_EXAMPLE "Enable building of examples" ON)
+  option(Scions_TRACE_TIME_CLANG "Enable Clang -ftime-trace feature" OFF)
   cmake_dependent_option(
     Scions_ENABLE_GLOBAL_HARDENING
     "Attempt to push hardening options to built dependencies"
@@ -34,7 +36,7 @@ macro(Scions_setup_options)
   if(NOT PROJECT_IS_TOP_LEVEL OR Scions_PACKAGING_MAINTAINER_MODE)
     option(Scions_ENABLE_IPO "Enable IPO/LTO" OFF)
     option(Scions_WARNINGS_AS_ERRORS "Treat Warnings As Errors" OFF)
-    option(Scions_ENABLE_USER_LINKER "Enable user-selected linker" OFF)
+    option(Scions_ENABLE_USER_LINKER "Enable user-selected linker" ON)
     option(Scions_ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" OFF)
     option(Scions_ENABLE_SANITIZER_LEAK "Enable leak sanitizer" OFF)
     option(Scions_ENABLE_SANITIZER_UNDEFINED "Enable undefined sanitizer" OFF)
@@ -96,6 +98,13 @@ macro(Scions_global_options)
     Scions_enable_ipo()
   endif()
 
+  if (Scions_TRACE_TIME_CLANG)
+    if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftime-trace")
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftime-trace")
+    endif ()
+  endif ()
   Scions_supports_sanitizers()
 
   if(Scions_ENABLE_HARDENING AND Scions_ENABLE_GLOBAL_HARDENING)
@@ -150,10 +159,7 @@ macro(Scions_local_options)
   if(Scions_ENABLE_PCH)
     target_precompile_headers(
       Scions_options
-      INTERFACE
-      <vector>
-      <string>
-      <utility>
+      INTERFACE <vector> <string> <string_view> <array> <utility> <algorithm>
     )
   endif()
 

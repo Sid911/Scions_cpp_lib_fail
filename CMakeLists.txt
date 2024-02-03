@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.26)
 
 # This template attempts to be "fetch_content"-able
 # so that it works well with tools like CPM or other
@@ -12,7 +12,7 @@ endif()
 # strongly encouraged to enable this globally to avoid conflicts between
 # -Wpedantic being enabled and -std=c++20 and -std=gnu++20 for example
 # when compiling with PCH enabled
-set(CMAKE_CXX_EXTENSIONS ON)
+#set(CMAKE_CXX_EXTENSIONS ON)
 #set(Scions_ENABLE_USER_LINKER ON)
 # Set the project name and language
 project(
