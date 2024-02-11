@@ -35,7 +35,7 @@
 #define MANIFOLD_STATIC_GRAPH_MAX_OP 10
 #endif
 
-// #ifndef MANIFOLD_PARAM_MAX
-// #define MANIFOLD_PARAM_MAX 2
-// #endif
+ #ifndef MANIFOLD_PARAM_BYTES_MAX
+ #define MANIFOLD_PARAM_BYTES_MAX 256
+ #endif
 // NOLINTEND

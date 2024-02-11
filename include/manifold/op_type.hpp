@@ -1,6 +1,3 @@
-//
-// Created by sid on 29/11/23.
-//
 #pragma once
 #include "common.hpp"
 
@@ -30,7 +27,7 @@ enum OpType : uint8_t {
   MAT_ARR_ADD
 };
 
-inline std::string_view optypeToString(OpType e) {
+constexpr inline std::string_view optypeToString(OpType e) {
   switch (e) {
   case ARRAY_ELM_ADD: return "ARRAY_ELM_ADD";
   case ARRAY_ELM_SUB: return "ARRAY_ELM_SUB";
@@ -47,6 +44,7 @@ inline std::string_view optypeToString(OpType e) {
   case MAT_INV: return "MAT_INV";
   case MAT_ARR_MUL: return "MAT_ARR_MUL";
   case MAT_ARR_ADD: return "MAT_ARR_ADD";
+  case FILL_ELM: return "FILL_ELM";
   default: return {};
   }
 }

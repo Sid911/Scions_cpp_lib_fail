@@ -17,7 +17,7 @@ namespace _internal {
   inline void invalidCpuOp() { throw std::runtime_error(std::format("No CPU OP compatible op found")); }
 
   template<typename T, size_t N, auto SEL_ARR, size_t TEN_SIZE>
-  inline std::array<T *, N> generatePointerArr(std::array<RawData<>, TEN_SIZE>& ptrs) {
+  inline std::array<T *, N> generatePointerArr(std::array<RawData<>, TEN_SIZE> &ptrs) {
     std::array<T *, N> refs{};
     static_assert(N <= SEL_ARR.size());
     for (size_t i = 0; i < N; ++i) { refs[i] = reinterpret_cast<T *>(ptrs[SEL_ARR[i]].data_ptr); }
@@ -35,9 +35,9 @@ namespace _internal {
     auto in_arr                         = generatePointerArr<T, exp.inp_size, IN_IND>(ten_ptrs);
     auto out_arr                        = generatePointerArr<T, exp.out_size, OUT_IND>(ten_ptrs);
 
-    if constexpr (OP == ARRAY_ELM_ADD) { element_wise_add<T, OUT_DATA.size, exp.inp_size>(out_arr[0], in_arr); }
-    if constexpr (OP == ARRAY_ELM_MUL) { element_wise_mul<T, OUT_DATA.size, exp.inp_size>(out_arr[0], in_arr); }
-    // invalidCpuOp();
+//    if constexpr (OP == ARRAY_ELM_ADD) { element_wise_add<T, OUT_DATA.size, exp.inp_size>(out_arr[0], in_arr); }
+//    if constexpr (OP == ARRAY_ELM_MUL) { element_wise_mul<T, OUT_DATA.size, exp.inp_size>(out_arr[0], in_arr); }
+    //    invalidCpuOp();
   }
 }  // namespace _internal
 

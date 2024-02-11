@@ -11,17 +11,30 @@ template<typename T>
 concept has_id = requires(T typ) {
   { typ.id } -> std::same_as<const unsigned &>;
 };
-
 template<typename T>
-concept has_size = requires(T typ) {
-  // remember : auto != decltype(auto)
-  { typ.size } -> std::same_as<const unsigned long &>;
+concept IsTBase = requires {
+  T::data_type;
+  T::size;
+  std::declval<T>().shape;
+};
+template<typename T>
+concept IsShape = requires {
+  { T::rank } -> std::same_as<std::size_t>;  // Requires rank member variable
+  { T::shape.size() } -> std::same_as<std::size_t>;  // Requires size() member function
 };
 
 template<typename T>
-concept is_array_like = requires(T typ) {
-  { typ.storage_type } -> std::same_as<const Store &>;
-  // { typ.to_tensor() } -> std::same_as<decltype(typ.to_tensor())>;
-} && has_id<T> && has_size<T> && std::is_class_v<T>;
+concept IsTensor = requires {
+  T::data_type;  // Requires a data_type member type
+  T::storage_type;  // Requires a storage_type member type
+  T::shape;  // Requires a shape member
+  T::id;
+};
+
+template<typename T>
+concept IsScalar = requires {
+  { T::shape.rank == 0 };
+};
+
 }  // namespace manifold::_internal
 #pragma endregion

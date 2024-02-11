@@ -47,4 +47,9 @@ struct DTypeToPrimitive<DType::UINT16> {
   using type = uint16_t;
 };
 #pragma endregion
+template<DType Type, typename T>
+concept IsCompatibleDType =
+  (Type == DType::F32 && std::is_same_v<T, float>) || (Type == DType::F64 && std::is_same_v<T, float>)
+  || (Type == DType::INT32 && std::is_same_v<T, int>) || (Type == DType::UINT8 && std::is_same_v<T, uint8_t>)
+  || (Type == DType::UINT16 && std::is_same_v<T, uint16_t>);
 }  // namespace manifold

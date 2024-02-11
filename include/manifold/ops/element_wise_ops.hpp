@@ -1,6 +1,3 @@
-//
-// Created by sid on 29/11/23.
-//
 #pragma once
 
 #include "../common.hpp"
@@ -9,82 +6,67 @@
 #include "../op_type.hpp"
 
 namespace manifold::op {
-#pragma region Element Wise OPs
-/**
- * \brief Per element operation
- *
- * \tparam T Type of Structure to be added. Must satisfy _internal::is_array_like concept.
- * \tparam N Size of inp array
- * \param type
- * \param out output Structure to store the addition
- * \param inp Input array containing all the structures to element wise add
- * \return Expression object describing the operation
- */
 template<typename T, std::size_t N>
-constexpr ExpressionReflection array_elm_op(const OpType type, T &out, const std::array<T, N> &inp)
-  requires _internal::is_array_like<T>
+constexpr ExpressionReflection array_elm_op(uint32_t id, const OpType type, const T &out, const std::array<T, N> &inp)
+  requires _internal::IsTensor<T>
 {
   static_assert(N <= MANIFOLD_MAX_EXP_REF_INPUT,
     "Manifold: Input count more than MANIFOLD_MAX_EXP_INPUT, please define it as per your needs");
 
-  using arr_type = std::array<ExpressionReflection, MANIFOLD_MAX_EXP_REF_INPUT>;
-  auto inputs    = std::make_unique<arr_type>();
-  auto outputs   = std::make_unique<arr_type>();
-  outputs->at(0) = ExpressionReflection(out);
-  for (size_t i = 0; i < inp.size(); ++i) { inputs->at(i) = ExpressionReflection(inp.at(i)); }
-  return { type, N, inputs, 1, outputs, {}};
+  using inp_type   = std::array<uint32_t, MANIFOLD_MAX_EXP_REF_INPUT>;
+  using out_type   = std::array<uint32_t, MANIFOLD_MAX_EXP_REF_OUTPUT>;
+  using param_type = std::array<std::byte, MANIFOLD_PARAM_BYTES_MAX>;
+
+  auto inputs  = inp_type();
+  auto outputs = out_type();
+  auto params  = param_type();
+
+  outputs.at(0) = out.id;
+  for (size_t i = 0; i < inp.size(); ++i) { inputs.at(i) = inp.at(i).id; }
+  return { id, type, N, inputs, 1, outputs, params };
 }
 
 template<typename T, std::size_t N>
-constexpr ExpressionReflection array_elm_op(const OpType type, const T &out, const std::array<T, N> &inp)
-  requires(_internal::is_array_like<const T>)
+constexpr ExpressionReflection array_add(uint32_t id, const T &out, const std::array<T, N> &inp)
+  requires _internal::IsTensor<T>
 {
-
-  static_assert(N <= MANIFOLD_MAX_EXP_REF_INPUT,
-    "Manifold: Input count more than MANIFOLD_MAX_EXP_INPUT, please define it as per your needs");
-
-  using arr_type = std::array<ExpressionReflection, MANIFOLD_MAX_EXP_REF_INPUT>;
-  auto inputs    = std::make_unique<arr_type>();
-  auto outputs   = std::make_unique<arr_type>();
-  outputs->at(0) = ExpressionReflection(out);
-  for (size_t i = 0; i < inp.size(); ++i) { inputs->at(i) = ExpressionReflection(inp.at(i)); }
-  return { type, N, inputs, 1, outputs, {} };
+  return array_elm_op(id, ARRAY_ELM_ADD, out, inp);
 }
 
-template<typename T, std::size_t N>
-constexpr ExpressionReflection array_add(const T &out, const std::array<T, N> &inp)
-  requires(_internal::is_array_like<const T>)
+// Memory init
+template<typename T>
+struct fillParams {
+  T value;
+};
+
+template<typename PARAM>
+constexpr std::array<std::byte, MANIFOLD_PARAM_BYTES_MAX> copyStructToByteArray(const PARAM &obj)
+  requires std::is_trivially_copyable_v<PARAM>
 {
-  using OutType = std::remove_const_t<T>;
-  return array_elm_op(ARRAY_ELM_ADD, out, inp);
+  std::array result = std::array<std::byte, MANIFOLD_PARAM_BYTES_MAX>();
+  static_assert(
+    MANIFOLD_PARAM_BYTES_MAX >= sizeof(PARAM), "Error Copying Params, please increase the 'MANIFOLD_PARAM_BYTES_MAX'");
+
+  auto byteArray = std::bit_cast<std::array<std::byte, sizeof(PARAM)>>(obj);
+  std::copy(byteArray.begin(), byteArray.end(), result.begin());
+  return result;
 }
 
-template<typename T, std::size_t N>
-constexpr ExpressionReflection array_mul(T &out, const std::array<T, N> &inp)
-  requires(_internal::is_array_like<T>)
+template<typename OUT, typename IN, size_t N>
+constexpr ExpressionReflection array_fill(uint32_t id, const std::array<OUT, N> &out, IN value)
+  requires(_internal::IsTensor<OUT> && IsCompatibleDType<OUT::data_type, IN>)
 {
-  return array_elm_op(ARRAY_ELM_MUL, out, inp);
-}
+  static_assert(N <= MANIFOLD_MAX_EXP_REF_OUTPUT,
+    "Manifold: Output count more than MANIFOLD_MAX_EXP_OUTPUT, please define it as per your needs");
 
-template<typename T, std::size_t N>
-constexpr ExpressionReflection array_mul(const T &out, const std::array<T, N> &inp)
-  requires(_internal::is_array_like<const T>)
-{
-  return array_elm_op(ARRAY_ELM_MUL, out, inp);
-}
+  auto inputs       = std::array<uint32_t, MANIFOLD_MAX_EXP_REF_INPUT>();
+  auto outputs      = std::array<uint32_t, MANIFOLD_MAX_EXP_REF_OUTPUT>();
+  auto param_struct = fillParams<IN>{ value };
+  auto params       = copyStructToByteArray(param_struct);
 
-template<typename T, std::size_t N>
-ExpressionReflection array_sub(T &out, const std::array<T, N> &inp)
-  requires(_internal::is_array_like<T>)
-{
-  return array_elm_op(ARRAY_ELM_SUB, out, inp);
-}
+  for (size_t i = 0; i < out.size(); ++i) { outputs.at(i) = out.at(i).id; }
 
-template<typename T, std::size_t N>
-ExpressionReflection array_sub(const T &out, const std::array<T, N> &inp)
-  requires(_internal::is_array_like<const T>)
-{
-  return array_elm_op<T, N>(ARRAY_ELM_SUB, out, inp);
+  return { id, FILL_ELM, 0, inputs, N, outputs, params };
 }
-#pragma endregion
 }  // namespace manifold::op
+#pragma endregion

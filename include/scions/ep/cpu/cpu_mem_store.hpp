@@ -59,7 +59,7 @@ public:
     }
   }
 
-  [[nodiscard]] consteval static CpuMemStore fromStaticGraph(const manifold::StaticGraph<> &graph) noexcept {
+  [[nodiscard]] consteval static CpuMemStore fromStaticGraph(const manifold::SymbolContainer<> &graph) noexcept {
     return CpuMemStore(manifold::compact<G>(graph));
   }
 

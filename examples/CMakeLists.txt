@@ -1,7 +1,7 @@
-add_executable(Gates2 gates_v2.cpp)
+add_executable(Gates3 gates_v3.cpp)
 
-target_compile_features(Gates2 PUBLIC cxx_std_23)
-target_link_libraries(Gates2 PRIVATE Scions_options Scions_warnings)
-#target_compile_options(Gates2 PUBLIC "-E")
-target_link_libraries(Gates2 PUBLIC Manifold::Manifold)
-target_precompile_headers(Gates2 INTERFACE <algorithm> <array> <vector> <string_view>)
+target_compile_features(Gates3 PUBLIC cxx_std_23)
+target_link_libraries(Gates3 PRIVATE Scions_options Scions_warnings)
+#target_compile_options(Gates3 PUBLIC "-E")
+target_link_libraries(Gates3 PUBLIC Manifold::Manifold)
+target_precompile_headers(Gates3 INTERFACE <algorithm> <array> <vector> <string_view>)
