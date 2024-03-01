@@ -1,6 +1,6 @@
 #pragma once
+#include <print>
 #include "op_type.hpp"
-#include "tensor.hpp"
 
 namespace manifold {
 struct ExpressionReflection {
@@ -28,11 +28,31 @@ struct ExpressionReflection {
     OUT_TYPE &_outputs,
     PARAM_TYPE &_params) noexcept
     : id(_id), type(_type), num_inputs(_num_inputs), num_outputs(_num_outputs), inputs(_inputs), outputs(_outputs),
-      params(std::move(_params)) {}
+      params(_params) {}
 
 #undef inp_type
 #undef out_type
 #undef param_type
 };
 #pragma endregion
-}  // namespace manifold
+}  // namespace manifoldtemplate<>
+
+template<>
+struct std::formatter<manifold::ExpressionReflection> {
+  constexpr auto parse(format_parse_context &ctx) { return ctx.begin(); }
+
+  template<typename FormatContext>
+  constexpr auto format(const manifold::ExpressionReflection &exp, FormatContext &ctx) const {
+    std::format_to(ctx.out(),
+      "{}:\nid: {}\nnum_inputs: {}\nnum_outputs: {}\n",
+      manifold::optypeToString(exp.type),
+      exp.id,
+      exp.num_inputs,
+      exp.num_outputs);
+    std::format_to(ctx.out(), "Inputs: ");
+    for (size_t i = 0; i < exp.num_inputs; ++i) { std::format_to(ctx.out(), "{} ", exp.inputs.at(i)); }
+    std::format_to(ctx.out(), "\nOutputs: ");
+    for (size_t i = 0; i < exp.num_outputs; ++i) { std::format_to(ctx.out(), "{} ", exp.outputs.at(i)); }
+    return std::format_to(ctx.out(), "\n");
+  }
+};

@@ -2,6 +2,7 @@
 #include "concepts.hpp"
 #include "constants.hpp"
 #include "shape.hpp"
+#include "manifold/utility.hpp"
 
 namespace manifold {
 // Reflection
@@ -13,7 +14,7 @@ struct TensorReflection {
   layout storage_layout;
   Store storage_type;
 
-  //  constexpr TensorReflection() : data_type(), size(0), id(0), storage_layout(), storage_type() {}
+  constexpr TensorReflection() : data_type(), size(0), id(0), storage_layout(), storage_type() {}
 
   [[nodiscard]] constexpr TensorReflection(const DType _data_type,
     const std::size_t _size,
@@ -57,3 +58,19 @@ struct Tensor : TensorBase {
 };
 
 }  // namespace manifold
+
+
+template<>
+struct std::formatter<manifold::TensorReflection> : std::formatter<std::string> {
+  template<typename FormatContext>
+  constexpr auto format(const manifold::TensorReflection &ten, FormatContext &ctx) const {
+    std::format_to(ctx.out(),
+      "id : {}\ntype : {}\nsize : {}\nstorage : {}\nlayout : {}",
+      ten.id,
+      dtypeToString(ten.data_type),
+      ten.size,
+      storeToString(ten.storage_type),
+      layoutToString(ten.storage_layout));
+    return std::format_to(ctx.out(), "\n{}", ten.shape);
+  }
+};
