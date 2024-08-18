@@ -2,8 +2,9 @@
 // Created by sid on 29/11/23.
 //
 #pragma once
-#include "common.hpp"
-#include "constants.hpp"
+#include "manifold/expression.hpp"
+#include <ranges>
+#include <type_traits>
 
 #pragma region Manifold concepts
 namespace manifold::_internal {
@@ -11,6 +12,7 @@ template<typename T>
 concept has_id = requires(T typ) {
   { typ.id } -> std::same_as<const unsigned &>;
 };
+
 template<typename T>
 concept IsTBase = requires {
   T::data_type;
@@ -32,9 +34,23 @@ concept IsTensor = requires {
 };
 
 template<typename T>
+concept IsExprReflection = requires { std::is_same_v<T, ExpressionReflection>; };
+
+template<typename T>
 concept IsScalar = requires {
-  { T::shape.rank == 0 };
+  { T::shape.rank == 1 };
 };
 
+template<typename T>
+struct is_std_array : std::false_type {};
+
+template<typename T, std::size_t N>
+struct is_std_array<std::array<T, N>> : std::true_type {};
+
+template<typename T>
+inline constexpr bool is_std_array_v = is_std_array<T>::value;
+
+template<typename T>
+concept IsStdArray = requires { is_std_array_v<T>; };
 }  // namespace manifold::_internal
 #pragma endregion

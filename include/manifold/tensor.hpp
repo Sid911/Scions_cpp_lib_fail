@@ -1,8 +1,9 @@
 #pragma once
 #include "concepts.hpp"
 #include "constants.hpp"
-#include "shape.hpp"
 #include "manifold/utility.hpp"
+#include "shape.hpp"
+#include <cstdint>
 
 namespace manifold {
 // Reflection
@@ -14,7 +15,7 @@ struct TensorReflection {
   layout storage_layout;
   Store storage_type;
 
-  constexpr TensorReflection() : data_type(), size(0), id(0), storage_layout(), storage_type() {}
+  constexpr TensorReflection() = default;
 
   [[nodiscard]] constexpr TensorReflection(const DType _data_type,
     const std::size_t _size,
@@ -26,6 +27,7 @@ struct TensorReflection {
       storage_type(_storage_type) {}
 };
 #pragma endregion
+
 template<DType Type, std::uint32_t... Shapes>
 struct TBase {
   static constexpr manifold::DType data_type = Type;
@@ -44,6 +46,7 @@ struct Tensor : TensorBase {
 
   [[nodiscard]] constexpr explicit Tensor(const uint32_t id_) : id(id_) {}
 
+
   // Reshape method
   template<std::size_t... NewShapes>
     requires(TensorBase::size == TBase<TensorBase::data_type, NewShapes...>::size)
@@ -56,6 +59,12 @@ struct Tensor : TensorBase {
     };
   }
 };
+
+
+template<DType Type, Store Storage = Store::HOST, layout Layout = layout::ROW_MAJOR>
+constexpr Tensor<TBase<Type, 1>, Storage, Layout> Scalar(uint32_t _id) {
+  return Tensor<TBase<Type, 1>, Storage, Layout>(_id);
+}
 
 }  // namespace manifold
 

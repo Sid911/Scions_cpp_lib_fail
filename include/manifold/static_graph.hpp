@@ -1,6 +1,5 @@
 #pragma once
 
-#include "manifold/common.hpp"
 #include "manifold/dag.hpp"
 
 namespace manifold {

@@ -6,7 +6,7 @@ struct ShapeReflection {
   std::size_t rank;
   std::array<std::uint32_t, MANIFOLD_MAX_RANK> shape;
 
-  constexpr ShapeReflection() : rank(UINT64_MAX), shape() {}
+  constexpr ShapeReflection() = default;
 
   [[nodiscard]] constexpr ShapeReflection(const std::uint32_t rank_,
     const std::array<std::uint32_t, MANIFOLD_MAX_RANK> &shape_)

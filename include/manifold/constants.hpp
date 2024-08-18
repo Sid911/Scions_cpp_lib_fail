@@ -4,13 +4,12 @@
 
 #pragma once
 
+#include <cstdint>
 namespace manifold {
 enum class DType : std::uint8_t { UINT8, UINT16, UINT32, UINT64, INT8, INT16, INT32, INT64, F32, F64 };
 
-constexpr std::array DTYPE_SIZES = { 1u, 2u, 4u, 8u, 1u, 2u, 4u, 8u, 4u, 8u };
-constexpr uint8_t NUM_DTYPE      = 10;
-
-static_assert(NUM_DTYPE == DTYPE_SIZES.size());
+constexpr uint8_t NUM_DTYPE                          = 10;
+constexpr std::array<uint8_t, NUM_DTYPE> DTYPE_SIZES = { 1u, 2u, 4u, 8u, 1u, 2u, 4u, 8u, 4u, 8u };
 
 // Enumeration for storage types
 enum class Store : std::uint8_t { HOST, DEVICE };

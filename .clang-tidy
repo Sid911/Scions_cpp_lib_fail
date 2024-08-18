@@ -19,9 +19,9 @@ HeaderFilterRegex: ''
 FormatStyle:     none
 
 CheckOptions:
-  readability-identifier-length.IgnoredVariableNames : "x|y|z|it|i|e"
+  readability-identifier-length.IgnoredVariableNames : "x|y|z|i|e"
   readability-identifier-length.IgnoredParameterNames: 'x|y|z|e|M|N'
-
+  readability-identifier-length = 2
 
 
 
