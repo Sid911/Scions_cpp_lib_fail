@@ -69,8 +69,8 @@ if(Scions_BUILD_EXAMPLE)
 endif()
 
 if(Scions_BUILD_EXAMPLE)
-  add_subdirectory(examples)
-endif ()
+    add_subdirectory(examples)
+endif()
 
 # Adding the tests:
 include(CTest)
