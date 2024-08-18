@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <expected>
 #include <experimental/simd>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <span>
@@ -12,9 +13,8 @@
 #include <string_view>
 #include <variant>
 #include <vector>
-#include <functional>
 
-#include <print>
 #include <format>
+#include <print>
 // #include <ranges>
 #include <locale>

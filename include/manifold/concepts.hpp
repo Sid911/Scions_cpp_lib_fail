@@ -10,30 +10,27 @@
 namespace manifold::_internal {
 template<typename T>
 concept has_id = requires(T typ) {
-    {
-        typ.id
-    }
-    -> std::same_as<const unsigned &>;
+  { typ.id } -> std::same_as<const unsigned &>;
 };
 
 template<typename T>
 concept IsTBase = requires {
-    T::data_type;
-    T::size;
-    std::declval<T>().shape;
+  T::data_type;
+  T::size;
+  std::declval<T>().shape;
 };
 template<typename T>
 concept IsShape = requires {
-    { T::rank } -> std::same_as<std::size_t>;  // Requires rank member variable
-    { T::shape.size() } -> std::same_as<std::size_t>;  // Requires size() member function
+  { T::rank } -> std::same_as<std::size_t>;  // Requires rank member variable
+  { T::shape.size() } -> std::same_as<std::size_t>;  // Requires size() member function
 };
 
 template<typename T>
 concept IsTensor = requires {
-    T::data_type;  // Requires a data_type member type
-    T::storage_type;  // Requires a storage_type member type
-    T::shape;  // Requires a shape member
-    T::id;
+  T::data_type;  // Requires a data_type member type
+  T::storage_type;  // Requires a storage_type member type
+  T::shape;  // Requires a shape member
+  T::id;
 };
 
 template<typename T>
@@ -41,7 +38,7 @@ concept IsExprReflection = requires { std::is_same_v<T, ExpressionReflection>; }
 
 template<typename T>
 concept IsScalar = requires {
-    { T::shape.rank == 1 };
+  { T::shape.rank == 1 };
 };
 
 template<typename T>

@@ -8,4 +8,3 @@
 #include "../expression.hpp"
 #include "../op_type.hpp"
 #include "element_wise_ops.hpp"
-

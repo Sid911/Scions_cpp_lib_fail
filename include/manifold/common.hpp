@@ -13,8 +13,8 @@
 #include <memory>
 #include <optional>
 
+#include "format"
 #include "macro.hpp"
 #include "print"
-#include "format"
 #include "ranges"
 #include <locale>

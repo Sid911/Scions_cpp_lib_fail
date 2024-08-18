@@ -4,9 +4,10 @@
 #pragma once
 #include "manifold/tensor.hpp"
 namespace scions::cpu {
-template<typename T = void> requires std::is_arithmetic_v<T> || std::is_void_v<T>
+template<typename T = void>
+  requires std::is_arithmetic_v<T> || std::is_void_v<T>
 struct RawData {
-    T *data_ptr;
-    manifold::TensorReflection *meta;
+  T *data_ptr;
+  manifold::TensorReflection *meta;
 };
-}
+}  // namespace scions::cpu

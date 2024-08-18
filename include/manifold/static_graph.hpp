@@ -6,27 +6,25 @@ namespace manifold {
 
 template<size_t TSize, size_t ExpSize>
 struct SymbolContainer {
-    std::array<TensorReflection, TSize> tensors;
-    std::array<ExpressionReflection, ExpSize> exprs;
+  std::array<TensorReflection, TSize> tensors;
+  std::array<ExpressionReflection, ExpSize> exprs;
 
-    [[nodiscard]] constexpr StaticDAG<TSize, ExpSize> to_dag() const {
-        return StaticDAG<TSize, ExpSize>(tensors, exprs);
-    }
+  [[nodiscard]] constexpr StaticDAG<TSize, ExpSize> to_dag() const { return StaticDAG<TSize, ExpSize>(tensors, exprs); }
 };
 }  // namespace manifold
 
 template<size_t A, size_t B>
 struct std::formatter<manifold::SymbolContainer<A, B>> : std::formatter<std::string> {
-    template<typename FormatContext>
-    constexpr auto format(const manifold::SymbolContainer<A, B> &sym, FormatContext &ctx) const {
-        for (size_t i = 0; i < sym.tensors.size(); ++i) {
-            std::format_to(ctx.out(), "\nTensor Pos : {}\n{}\n", i, sym.tensors.at(i));
-        }
-        for (size_t i = 0; i < sym.exprs.size(); ++i) {
-            std::format_to(ctx.out(), "\nExpr Pos : {}\n{}\n", i, sym.exprs.at(i));
-        }
-        return std::format_to(ctx.out(), "\n\n");
+  template<typename FormatContext>
+  constexpr auto format(const manifold::SymbolContainer<A, B> &sym, FormatContext &ctx) const {
+    for (size_t i = 0; i < sym.tensors.size(); ++i) {
+      std::format_to(ctx.out(), "\nTensor Pos : {}\n{}\n", i, sym.tensors.at(i));
     }
+    for (size_t i = 0; i < sym.exprs.size(); ++i) {
+      std::format_to(ctx.out(), "\nExpr Pos : {}\n{}\n", i, sym.exprs.at(i));
+    }
+    return std::format_to(ctx.out(), "\n\n");
+  }
 };
 // Todo : might need this when implementing mem stores
 // struct GraphMetadata {
