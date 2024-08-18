@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.26)
 # manual dependency management
 
 # Only set the cxx_standard if it is not set by someone else
-if (NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 23)
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 23)
 endif()
 
 # strongly encouraged to enable this globally to avoid conflicts between
@@ -16,23 +16,22 @@ endif()
 #set(Scions_ENABLE_USER_LINKER ON)
 # Set the project name and language
 project(
-  Scions
-  VERSION 0.0.1
-  DESCRIPTION "A lightweight and fast ML framework built for the edge"
-  HOMEPAGE_URL "https://github.com/Sid911/Scions"
-  LANGUAGES CXX C)
+    Scions
+    VERSION 0.0.1
+    DESCRIPTION "A lightweight and fast ML framework built for the edge"
+    HOMEPAGE_URL "https://github.com/Sid911/Scions"
+    LANGUAGES CXX C)
 
 include(cmake/PreventInSourceBuilds.cmake)
 include(ProjectOptions.cmake)
 
+scions_setup_options()
 
-Scions_setup_options()
-
-Scions_global_options()
+scions_global_options()
 include(Dependencies.cmake)
-Scions_setup_dependencies()
+scions_setup_dependencies()
 
-Scions_local_options()
+scions_local_options()
 
 # don't know if this should be set globally from here or not...
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -41,10 +40,10 @@ set(GIT_SHA
     "Unknown"
     CACHE STRING "SHA this build was generated from")
 string(
-  SUBSTRING "${GIT_SHA}"
-            0
-            8
-            GIT_SHORT_SHA)
+    SUBSTRING "${GIT_SHA}"
+              0
+              8
+              GIT_SHORT_SHA)
 
 target_compile_features(Scions_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 
@@ -62,7 +61,11 @@ add_subdirectory(src)
 
 # Don't even look at tests if we're not top level
 if(NOT PROJECT_IS_TOP_LEVEL)
-  return()
+    return()
+endif()
+
+if(Scions_BUILD_EXAMPLE)
+    add_subdirectory(examples)
 endif()
 
 if(Scions_BUILD_EXAMPLE)
@@ -73,8 +76,8 @@ endif ()
 include(CTest)
 
 if(BUILD_TESTING)
-#  message(AUTHOR_WARNING "Building Tests. Be sure to check out test/constexpr_tests.cpp for constexpr testing")
-  add_subdirectory(test)
+    #  message(AUTHOR_WARNING "Building Tests. Be sure to check out test/constexpr_tests.cpp for constexpr testing")
+    add_subdirectory(test)
 endif()
 
 #
@@ -90,16 +93,16 @@ endif()
 # If MSVC is being used, and ASAN is enabled, we need to set the debugger environment
 # so that it behaves well with MSVC's debugger, and we can run the target from visual studio
 if(MSVC)
-  get_all_installable_targets(all_targets)
-  message("all_targets=${all_targets}")
-  set_target_properties(${all_targets} PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=$(VC_ExecutablePath_x64);%PATH%")
+    get_all_installable_targets(all_targets)
+    message("all_targets=${all_targets}")
+    set_target_properties(${all_targets} PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=$(VC_ExecutablePath_x64);%PATH%")
 endif()
 
 # set the startup project for the "play" button in MSVC
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT intro)
 
 if(CMAKE_SKIP_INSTALL_RULES)
-  return()
+    return()
 endif()
 
 include(cmake/PackageProject.cmake)

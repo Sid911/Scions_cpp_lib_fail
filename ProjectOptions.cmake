@@ -24,6 +24,7 @@ macro(Scions_setup_options)
   option(Scions_ENABLE_COVERAGE "Enable coverage reporting" OFF)
   option(Scions_BUILD_EXAMPLE "Enable building of examples" ON)
   option(Scions_TRACE_TIME_CLANG "Enable Clang -ftime-trace feature" OFF)
+
   cmake_dependent_option(
     Scions_ENABLE_GLOBAL_HARDENING
     "Attempt to push hardening options to built dependencies"
@@ -109,7 +110,7 @@ macro(Scions_global_options)
 
   if(Scions_ENABLE_HARDENING AND Scions_ENABLE_GLOBAL_HARDENING)
     include(cmake/Hardening.cmake)
-    if(NOT SUPPORTS_UBSAN 
+    if(NOT SUPPORTS_UBSAN
        OR Scions_ENABLE_SANITIZER_UNDEFINED
        OR Scions_ENABLE_SANITIZER_ADDRESS
        OR Scions_ENABLE_SANITIZER_THREAD
@@ -193,7 +194,7 @@ macro(Scions_local_options)
 
   if(Scions_ENABLE_HARDENING AND NOT Scions_ENABLE_GLOBAL_HARDENING)
     include(cmake/Hardening.cmake)
-    if(NOT SUPPORTS_UBSAN 
+    if(NOT SUPPORTS_UBSAN
        OR Scions_ENABLE_SANITIZER_UNDEFINED
        OR Scions_ENABLE_SANITIZER_ADDRESS
        OR Scions_ENABLE_SANITIZER_THREAD
