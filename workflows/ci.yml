@@ -11,7 +11,6 @@ on:
 env:
   CLANG_TIDY_VERSION: "18.0.0"
   VERBOSE: 1
-
 jobs:
   Test:
     runs-on: ${{ matrix.os }}
@@ -101,7 +100,6 @@ jobs:
             build_type: Release
             packaging_maintainer_mode: Off
             package_generator: ZIP
-
     steps:
       - name: Check for llvm version mismatches
         if: ${{ contains(matrix.compiler, 'llvm') && !contains(matrix.compiler, env.CLANG_TIDY_VERSION) }}
@@ -125,6 +123,7 @@ jobs:
         with:
           envFile: ".github/constants.env"
 
+
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
         with:
@@ -136,7 +135,6 @@ jobs:
           vcpkg: false
           ccache: true
           clangtidy: ${{ env.CLANG_TIDY_VERSION }}
-
           cppcheck: true
 
           gcovr: true

@@ -74,7 +74,7 @@ MacroBlockBegin: ''
 MacroBlockEnd: ''
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: Inner
-ObjCBlockIndentWidth: 7
+ObjCBlockIndentWidth: 2
 ObjCSpaceAfterProperty: true
 ObjCSpaceBeforeProtocolList: false
 PointerAlignment: Right
