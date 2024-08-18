@@ -1,1 +1,82 @@
-[{"name": "examples/Gates2", "cat": "targets", "ph": "X", "ts": 1810000, "dur": 1389000, "pid": 0, "tid": 0, "args": {}}, {"name": "src/Scions/libCPU.a", "cat": "targets", "ph": "X", "ts": 1784000, "dur": 25000, "pid": 0, "tid": 0, "args": {}}, {"name": "src/Scions/CMakeFiles/CPU.dir/ep/cpu/cpu_ep.cpp.o", "cat": "targets", "ph": "X", "ts": 672000, "dur": 1111000, "pid": 0, "tid": 0, "args": {}}, {"name": "src/Scions/CMakeFiles/CPU.dir/ep/cpu/op/tensor_ops.cpp.o", "cat": "targets", "ph": "X", "ts": 672000, "dur": 716000, "pid": 0, "tid": 1, "args": {}}, {"name": "src/Scions/CMakeFiles/CPU.dir/ep/common/runtime_sequential_graph.cpp.o", "cat": "targets", "ph": "X", "ts": 671000, "dur": 698000, "pid": 0, "tid": 2, "args": {}}, {"name": "src/Scions/CMakeFiles/CPU.dir/cmake_pch.hxx.pch", "cat": "targets", "ph": "X", "ts": 3000, "dur": 668000, "pid": 0, "tid": 0, "args": {}}, {"name": "examples/CMakeFiles/Gates2.dir/gates_v2.cpp.o", "cat": "targets", "ph": "X", "ts": 3000, "dur": 12000, "pid": 0, "tid": 1, "args": {}}, {"name": "clean", "cat": "targets", "ph": "X", "ts": 0, "dur": 6000, "pid": 0, "tid": 2, "args": {}}]
+[
+  {
+    "name": "examples/Gates2",
+    "cat": "targets",
+    "ph": "X",
+    "ts": 1810000,
+    "dur": 1389000,
+    "pid": 0,
+    "tid": 0,
+    "args": {}
+  },
+  {
+    "name": "src/Scions/libCPU.a",
+    "cat": "targets",
+    "ph": "X",
+    "ts": 1784000,
+    "dur": 25000,
+    "pid": 0,
+    "tid": 0,
+    "args": {}
+  },
+  {
+    "name": "src/Scions/CMakeFiles/CPU.dir/ep/cpu/cpu_ep.cpp.o",
+    "cat": "targets",
+    "ph": "X",
+    "ts": 672000,
+    "dur": 1111000,
+    "pid": 0,
+    "tid": 0,
+    "args": {}
+  },
+  {
+    "name": "src/Scions/CMakeFiles/CPU.dir/ep/cpu/op/tensor_ops.cpp.o",
+    "cat": "targets",
+    "ph": "X",
+    "ts": 672000,
+    "dur": 716000,
+    "pid": 0,
+    "tid": 1,
+    "args": {}
+  },
+  {
+    "name": "src/Scions/CMakeFiles/CPU.dir/ep/common/runtime_sequential_graph.cpp.o",
+    "cat": "targets",
+    "ph": "X",
+    "ts": 671000,
+    "dur": 698000,
+    "pid": 0,
+    "tid": 2,
+    "args": {}
+  },
+  {
+    "name": "src/Scions/CMakeFiles/CPU.dir/cmake_pch.hxx.pch",
+    "cat": "targets",
+    "ph": "X",
+    "ts": 3000,
+    "dur": 668000,
+    "pid": 0,
+    "tid": 0,
+    "args": {}
+  },
+  {
+    "name": "examples/CMakeFiles/Gates2.dir/gates_v2.cpp.o",
+    "cat": "targets",
+    "ph": "X",
+    "ts": 3000,
+    "dur": 12000,
+    "pid": 0,
+    "tid": 1,
+    "args": {}
+  },
+  {
+    "name": "clean",
+    "cat": "targets",
+    "ph": "X",
+    "ts": 0,
+    "dur": 6000,
+    "pid": 0,
+    "tid": 2,
+    "args": {}
+  }
+]
